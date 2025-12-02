@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mining Statistics Dashboard - Z€RO</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --dark: #0a0e27;
+            --darker: #050714;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --card-bg: rgba(26, 32, 53, 0.7);
+            --sidebar-bg: rgba(15, 23, 42, 0.9);
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(67, 97, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(67, 97, 238, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: bgMove 20s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
+            filter: blur(2px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-10px) translateX(20px);
+            }
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .sidebar-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--light);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 260px;
+            transition: all 0.3s ease;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .stat-icon.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, var(--success), #00c49a);
+            color: white;
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning), #ff9a00);
+            color: white;
+        }
+
+        .stat-icon.danger {
+            background: linear-gradient(135deg, var(--danger), #e63946);
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--light);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Detailed Stats */
+        .detailed-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detailed-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detailed-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .detailed-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .detailed-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .detailed-title {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .detailed-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chart-title i {
+            color: var(--accent);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            z-index: 1;
+        }
+
+        /* Mobile Navigation */
+        .mobile-top-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            /* background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            display: flex; */
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-top-bar .home-link {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .mobile-top-bar .home-link i {
+            margin-right: 8px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav a span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .bottom-nav a.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav a:hover {
+            color: var(--light);
+            transform: translateY(-3px);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-menu li {
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .side-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .side-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .side-menu a:hover {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+            padding-left: 25px;
+        }
+
+        .side-menu i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .menu-overlay.open {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-top-bar {
+                display: flex;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .bottom-nav {
+                display: flex;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detailed-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .detailed-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-card {
+                padding: 20px;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            color: var(--light);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        .toast.success i {
+            color: var(--success);
+        }
+
+        .toast.error i {
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-grid"></div>
+        <div id="circles-container"></div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <span>Z€RO</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="/statistics" class="active"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+                <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+                <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+                <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+                <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="/help"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+                <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Mining Statistics</h1>
+                <p class="page-subtitle">Track your mining performance and earnings</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value" id="total-mined">Loading...</div>
+                    <div class="stat-label">Total Mined</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="mining-time">Loading...</div>
+                    <div class="stat-label">Mining Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-value" id="level">Loading...</div>
+                    <div class="stat-label">Level</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-value" id="balance">Loading...</div>
+                    <div class="stat-label">Current Balance</div>
+                </div>
+            </div>
+
+            <!-- Detailed Stats -->
+            <div class="detailed-stats">
+                <div class="detailed-card">
+                    <div class="detailed-title">Mining Rate</div>
+                    <div class="detailed-value" id="mining-rate">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Avg. Mining Reward</div>
+                    <div class="detailed-value" id="avg-mining-reward">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Avg. Bonus Reward</div>
+                    <div class="detailed-value" id="avg-bonus-reward">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Total Transactions</div>
+                    <div class="detailed-value" id="total-transactions">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Mining Transactions</div>
+                    <div class="detailed-value" id="mining-transactions">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Bonus Transactions</div>
+                    <div class="detailed-value" id="bonus-transactions">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Referral Transactions</div>
+                    <div class="detailed-value" id="referral-transactions">Loading...</div>
+                </div>
+                <div class="detailed-card">
+                    <div class="detailed-title">Experience</div>
+                    <div class="detailed-value" id="exp">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <i class="fas fa-chart-area"></i>
+                        Earnings Over Time
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="earningsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Transaction Types
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="transactionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar">
+        <a href="/home1" class="home-link">
+            <!-- <i class="fas fa-coins"></i>
+            <span>Z€RO</span> -->
+        </a>
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="/desh1"><span><i class="fas fa-home"></i></span><span>Home</span></a>
+        <a href="/statistics" class="active"><span><i class="fas fa-chart-line"></i></span><span>Stats</span></a>
+        <a href="/gift"><span><i class="fas fa-gift"></i></span><span>Gift</span></a>
+        <a href="/speen"><span><i class="fas fa-sync-alt"></i></span><span>Spin</span></a>
+        <a href="/profile"><span><i class="fas fa-user"></i></span><span>Profile</span></a>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="side-menu">
+        <ul>
+            <li><a href="/referrals"><i class="fas fa-user-friends"></i> Referral</a></li>
+            <li><a href="/shop"><i class="fas fa-shopping-bag"></i> Shop</a></li>
+            <li><a href="/code-claim"><i class="fas fa-ticket-alt"></i> Pass claim</a></li>
+            <li><a href="/levels"><i class="fas fa-layer-group"></i> Levels</a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i> Setting</a></li>
+            <li><a href="/rankings"><i class="fas fa-trophy"></i> Rankings</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/home1"><i class="fas fa-home"></i> Home</a></li>
+        </ul>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        // Base URL for API calls - Dynamic based on current origin
+        const API_BASE_URL = window.location.origin;
+
+        let userData = {};
+        let earningsChart, transactionChart;
+
+        // DOM elements
+        const elements = {
+            totalMined: document.getElementById('total-mined'),
+            miningTime: document.getElementById('mining-time'),
+            level: document.getElementById('level'),
+            balance: document.getElementById('balance'),
+            miningRate: document.getElementById('mining-rate'),
+            avgMiningReward: document.getElementById('avg-mining-reward'),
+            avgBonusReward: document.getElementById('avg-bonus-reward'),
+            totalTransactions: document.getElementById('total-transactions'),
+            miningTransactions: document.getElementById('mining-transactions'),
+            bonusTransactions: document.getElementById('bonus-transactions'),
+            referralTransactions: document.getElementById('referral-transactions'),
+            exp: document.getElementById('exp')
+        };
+
+        // Create animated background circles
+        function createAnimatedBackground() {
+            const container = document.getElementById('circles-container');
+            const circleCount = 15;
+            
+            for (let i = 0; i < circleCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Random position
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                circle.style.animationDuration = `${Math.random() * 20 + 20}s`;
+                circle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(circle);
+            }
+        }
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideMenu = document.getElementById('side-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sideMenu.classList.toggle('open');
+                menuOverlay.classList.toggle('open');
+            });
+        }
+
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', () => {
+                sideMenu.classList.remove('open');
+                menuOverlay.classList.remove('open');
+            });
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            
+            const toastMessage = document.getElementById('toast-message');
+            
+            toast.className = `toast ${type}`;
+            toast.innerHTML = (type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>') + `<span id="toast-message">${message}</span>`;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Fetch user data from Flask API
+        function fetchUserData() {
+            fetch(`${API_BASE_URL}/api/user`, {
+                credentials: 'include'
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            window.location.href = '/login';
+                            return;
+                        }
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    userData = data || {};
+                    updateUI();
+                    updateCharts();
+                    showToast('Statistics loaded successfully!', 'success');
+                })
+                .catch(err => {
+                    console.error("Error fetching user data:", err);
+                    showToast('Failed to load statistics. Please refresh.', 'error');
+                    // Set default values on error
+                    Object.values(elements).forEach(el => {
+                        if (el) el.textContent = '0.0000';
+                    });
+                });
+        }
+
+        // Update UI elements with fetched data
+        function updateUI() {
+            // Header stats - with null checks
+            if (elements.totalMined) elements.totalMined.textContent = (userData.totalMined || 0).toFixed(4);
+            if (elements.miningTime) elements.miningTime.textContent = `${Math.floor((userData.miningTime || 0) / 3600)}H`;
+            if (elements.level) elements.level.textContent = userData.level || 1;
+            if (elements.balance) elements.balance.textContent = (userData.balance || 0).toFixed(4);
+
+            // Detailed stats
+            if (elements.miningRate) elements.miningRate.textContent = `1.0000 COINS/24H`; // Fixed as per Flask logic
+            if (elements.exp) elements.exp.textContent = `${userData.exp || 0} / ${userData.expThreshold || 500} EXP`;
+
+            // Calculate transaction stats
+            const transactions = userData.transactions || [];
+            const miningTxs = transactions.filter(tx => tx.type === "Mining");
+            const bonusTxs = transactions.filter(tx => tx.type === "BONUS");
+            const referralTxs = transactions.filter(tx => tx.type === "REFERRAL" || tx.type === "REFERRAL_SIGNUP");
+            
+            const avgMiningReward = miningTxs.length ? (miningTxs.reduce((sum, tx) => sum + (tx.amount || 0), 0) / miningTxs.length) : 0;
+            const avgBonusReward = bonusTxs.length ? (bonusTxs.reduce((sum, tx) => sum + (tx.amount || 0), 0) / bonusTxs.length) : 0;
+
+            if (elements.totalTransactions) elements.totalTransactions.textContent = transactions.length;
+            if (elements.miningTransactions) elements.miningTransactions.textContent = miningTxs.length;
+            if (elements.bonusTransactions) elements.bonusTransactions.textContent = bonusTxs.length;
+            if (elements.referralTransactions) elements.referralTransactions.textContent = referralTxs.length;
+            if (elements.avgMiningReward) elements.avgMiningReward.textContent = `${avgMiningReward.toFixed(4)} COINS`;
+            if (elements.avgBonusReward) elements.avgBonusReward.textContent = `${avgBonusReward.toFixed(4)} COINS`;
+        }
+
+        // Update charts with fetched data
+        function updateCharts() {
+            const transactions = userData.transactions || [];
+            const positiveTxTypes = ["Mining", "BONUS", "REFERRAL", "REFERRAL_SIGNUP", "BALANCE_PURCHASE"];
+            const positiveTxs = transactions.filter(tx => positiveTxTypes.includes(tx.type) && (tx.amount || 0) >= 0);
+            const miningTxs = positiveTxs.filter(tx => tx.type === "Mining");
+            const bonusTxs = positiveTxs.filter(tx => tx.type === "BONUS");
+            const referralTxs = positiveTxs.filter(tx => tx.type === "REFERRAL" || tx.type === "REFERRAL_SIGNUP");
+            const balancePurchaseTxs = positiveTxs.filter(tx => tx.type === "BALANCE_PURCHASE");
+
+            // Prepare data for Earnings Over Time chart
+            const today = new Date();
+            const labels = [];
+            const miningData = [];
+            const bonusData = [];
+            const referralData = [];
+            const balancePurchaseData = [];
+            
+            // Generate labels for the last 5 days
+            for (let i = 4; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                labels.push(date.toLocaleString('en-US', { month: 'short', day: 'numeric' }).toUpperCase());
+            }
+
+            // Calculate daily earnings by day (transactions.date is in ms)
+            labels.forEach((label, index) => {
+                const date = new Date(today);
+                date.setDate(today.getDate() - (4 - index));
+                const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                const dayEnd = dayStart + 24 * 60 * 60 * 1000;
+
+                const miningAmount = miningTxs
+                    .filter(tx => (tx.date || 0) >= dayStart && (tx.date || 0) < dayEnd)
+                    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+                const bonusAmount = bonusTxs
+                    .filter(tx => (tx.date || 0) >= dayStart && (tx.date || 0) < dayEnd)
+                    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+                const referralAmount = referralTxs
+                    .filter(tx => (tx.date || 0) >= dayStart && (tx.date || 0) < dayEnd)
+                    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+                const balancePurchaseAmount = balancePurchaseTxs
+                    .filter(tx => (tx.date || 0) >= dayStart && (tx.date || 0) < dayEnd)
+                    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+
+                miningData.push(miningAmount);
+                bonusData.push(bonusAmount);
+                referralData.push(referralAmount);
+                balancePurchaseData.push(balancePurchaseAmount);
+            });
+
+            // Calculate max coins for y-axis scaling
+            const allData = [...miningData, ...bonusData, ...referralData, ...balancePurchaseData];
+            const maxCoins = allData.length ? Math.max(...allData) : 1;
+            const yAxisMax = Math.ceil(maxCoins * 1.2);
+            const yAxisStep = Math.max(1, Math.ceil(yAxisMax / 5));
+
+            // Update Earnings Over Time chart
+            if (earningsChart) earningsChart.destroy();
+            const earningsCtx = document.getElementById('earningsChart').getContext('2d');
+            earningsChart = new Chart(earningsCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'MINING',
+                            data: miningData,
+                            borderColor: '#06ffa5',
+                            backgroundColor: 'rgba(6, 255, 165, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'BONUS',
+                            data: bonusData,
+                            borderColor: '#ffbe0b',
+                            backgroundColor: 'rgba(255, 190, 11, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'REFERRAL',
+                            data: referralData,
+                            borderColor: '#9F7AEA',
+                            backgroundColor: 'rgba(159, 122, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'BALANCE PURCHASE',
+                            data: balancePurchaseData,
+                            borderColor: '#4cc9f0',
+                            backgroundColor: 'rgba(76, 201, 240, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            min: 0,
+                            max: yAxisMax,
+                            ticks: {
+                                stepSize: yAxisStep,
+                                color: '#CBD5E1',
+                                callback: function(value) {
+                                    return value.toFixed(2);
+                                }
+                            },
+                            grid: { color: '#334155' }
+                        },
+                        x: {
+                            ticks: { color: '#CBD5E1' },
+                            grid: { color: '#334155' }
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            labels: { color: '#CBD5E1' },
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+
+            // Update Transaction Types chart
+            const totalTxs = transactions.length;
+            const miningCount = miningTxs.length;
+            const bonusCount = bonusTxs.length;
+            const referralCount = referralTxs.length;
+            const balancePurchaseCount = balancePurchaseTxs.length;
+
+            if (transactionChart) transactionChart.destroy();
+            const transactionCtx = document.getElementById('transactionChart').getContext('2d');
+            transactionChart = new Chart(transactionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['MINING', 'BONUS', 'REFERRAL', 'BALANCE PURCHASE'],
+                    datasets: [{
+                        data: [miningCount, bonusCount, referralCount, balancePurchaseCount],
+                        backgroundColor: ['#06ffa5', '#ffbe0b', '#9F7AEA', '#4cc9f0'],
+                        borderColor: '#1E293B',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            labels: { color: '#CBD5E1' },
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+                                    const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+                                    return `${label}: ${percentage}% (${value} transactions)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize the app
+        window.addEventListener('DOMContentLoaded', () => {
+            createAnimatedBackground();
+            fetchUserData();
+        });
+    </script>
+</body>
+</html>

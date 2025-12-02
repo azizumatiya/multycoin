@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Level Unlock Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* mobile */
+      gap: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(6, 1fr); /* desktop */
+      }
+    }
+    .box {
+      background: #2e2e44;
+      padding: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .box.locked {
+      background: #555;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .box.completed {
+      background: #28a745;
+    }
+    .box:hover:not(.locked) {
+      transform: scale(1.05);
+    }
+    .balance {
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+     /* Side Menu Styles */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100vh;
+            background-color: #2A2F3B;
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px; /* Space for hamburger */
+            overflow-y: auto;
+        }
+        .side-menu.open {
+            right: 0;
+        }
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .side-menu li {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .side-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+        }
+        .side-menu a:hover {
+            color: #4299E1;
+        }
+
+        /* Overlay for closing menu */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .menu-overlay.open {
+            display: block;
+        }
+        
+  .mobile-top-bar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  /* background-color: #2A2F3B; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  /* box-shadow: 0 2px 10px rgba(0,0,0,0.2); */
+}
+
+.mobile-top-bar .home-link {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.mobile-top-bar .home-link i {
+  margin-right: 8px;
+  font-size: 1.5rem;
+  color: #60A5FA;
+}
+
+@media (max-width: 720px) {
+  .mobile-top-bar {
+    display: flex;
+  }
+  
+  .main-content {
+    padding-top: 80px; /* Space for top bar */
+  }
+} 
+  </style>
+</head>
+<body>
+  <h1>🎮 Level Unlock Game</h1>
+  <div class="balance" id="balanceDisplay">Balance: 0 coins</div>
+  <div class="grid" id="levelGrid"></div>
+
+  <script>
+    const totalLevels = 25;
+
+    async function fetchUserData() {
+      try {
+        const response = await fetch('/api/user');
+        if (!response.ok) throw new Error('Not logged in');
+        return await response.json();
+      } catch (err) {
+        alert('Please log in to play the game.');
+        window.location.href = '/login';
+        return null;
+      }
+    }
+
+    async function renderLevels() {
+      const user = await fetchUserData();
+      if (!user) return;
+
+      const grid = document.getElementById("levelGrid");
+      grid.innerHTML = "";
+      document.getElementById("balanceDisplay").textContent = `Balance: ${user.balance.toFixed(2)} coins`;
+
+      for (let i = 1; i <= totalLevels; i++) {
+        const coins = i * 10;
+        const box = document.createElement("div");
+        box.className = "box";
+        if (i > user.level) {
+          box.classList.add("locked");
+        } else if (i < user.level) {
+          box.classList.add("completed");
+        }
+        box.innerHTML = `<h3>Level ${i}</h3><p>💰 ${coins} coins</p>`;
+        
+        box.onclick = async () => {
+          if (i > user.level) {
+            alert("🔒 This level is locked. Complete the previous level first!");
+            return;
+          }
+          if (i < user.level) {
+            alert(`✅ You have already completed Level ${i}!`);
+            return;
+          }
+          try {
+            const response = await fetch("/api/save_progress", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ level: i, coins })
+            });
+            const data = await response.json();
+            if (data.success) {
+              alert(`🎉 You completed Level ${i}! You earned ${coins} coins.`);
+              renderLevels();
+            } else {
+              alert(data.error);
+            }
+          } catch (err) {
+            alert("Error saving progress. Please try again.");
+          }
+        };
+        grid.appendChild(box);
+      }
+    }
+
+    renderLevels();
+  </script>
+</body>
+</html>

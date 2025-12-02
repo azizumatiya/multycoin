@@ -1,0 +1,431 @@
+<!-- Navigation -->
+ <style>
+    /* Navigation */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: rgb(0, 32, 63);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.navbar {
+    max-width: 1250px;
+    margin: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.logo a {
+    font-size: 2.5rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.links {
+    list-style: none;
+    display: flex;
+}
+
+.links li {
+    padding: 0 15px;
+    position: relative;
+}
+
+.links li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.links li a:hover {
+    color: #ADEFD1FF;
+}
+
+.htmlCss-sub-menu {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background: linear-gradient(135deg, #1A3C54 0%, #2A4B6A 100%);
+    border-radius: 8px;
+    display: none;
+    z-index: 2;
+    min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.htmlCss-sub-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.htmlCss-sub-menu li {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.htmlCss-sub-menu li:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.htmlCss-sub-menu li a {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.htmlCss-sub-menu li a:hover {
+    color: #ADEFD1FF;
+}
+
+.hamburger {
+    display: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Profile Image and Dropdown */
+.settings-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-image {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #ADEFD1FF;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.profile-image:hover {
+    transform: scale(1.1);
+}
+
+.settings-sub-menu {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background: linear-gradient(135deg, #1A3C54 0%, #2A4B6A 100%);
+    border-radius: 8px;
+    display: none;
+    z-index: 2;
+    min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.settings-sub-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.settings-sub-menu li {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s ease;
+}
+
+.settings-sub-menu li:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.settings-sub-menu li a {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.settings-sub-menu li a:hover {
+    color: #ADEFD1FF;
+}
+
+.settings-sub-menu li i {
+    font-size: 18px;
+    color: #ADEFD1FF;
+}
+
+.mobile-nav-controls {
+    display: none;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+/* Mobile Menu */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    .mobile-nav-controls {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 250px;
+        height: 100vh;
+        background: rgb(0, 32, 63);
+        flex-direction: column;
+        transition: left 0.3s ease;
+        padding: 20px;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .links {
+        flex-direction: column;
+        padding: 20px 0;
+    }
+
+    .links li {
+        padding: 10px 0;
+    }
+
+    .htmlCss-sub-menu {
+        position: static;
+        background: #3E8DA8;
+        display: none;
+        box-shadow: none;
+        border: none;
+        min-width: 100%;
+    }
+
+    .htmlCss-sub-menu.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .htmlCss-sub-menu li,
+    .settings-sub-menu li {
+        padding: 10px 15px;
+    }
+
+    .htmlCss-sub-menu li a,
+    .settings-sub-menu li a {
+        font-size: 0.9rem;
+    }
+
+    .settings-sub-menu li i {
+        font-size: 16px;
+    }
+
+    .settings-container {
+        margin-top: 0px;
+    }
+
+    .profile-image {
+        width: 40px;
+        height: 40px;
+        padding: 2px;
+    }
+
+    .settings-container.desktop {
+        display: none;
+    }
+
+    .mobile-nav-controls .settings-sub-menu {
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background: linear-gradient(135deg, #1A3C54 0%, #2A4B6A 100%);
+        border-radius: 8px;
+        display: none;
+        z-index: 2;
+        min-width: 180px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .mobile-nav-controls .settings-sub-menu.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links .settings-sub-menu {
+        position: static;
+        background: #3E8DA8;
+        display: none;
+        box-shadow: none;
+        border: none;
+        min-width: 100%;
+    }
+
+    .nav-links .settings-sub-menu.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+ </style>
+<nav>
+    <div class="navbar">
+        <div class="logo"><a href="/home1">Z€RO</a></div>
+        <div class="mobile-nav-controls">
+            <i class="bx bx-menu hamburger" aria-label="Toggle navigation menu"></i>
+            <div class="settings-container mobile">
+                <img src="" class="profile-image" alt="Profile Image" id="mobile-profile-image">
+                <ul class="settings-sub-menu sub-menu">
+                    <li><i class="bx bx-grid-alt"></i><a href="/dashboard">DASHBOARD</a></li>
+                    <li><i class="bx bx-user"></i><a href="/profile">PROFILE</a></li>
+                    <li><i class="bx"><span>🚪</span></i><a href="/logout">LOGOUT</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav-links">
+            <ul class="links">
+                <li><a href="/home1">HOME</a></li>
+                <li>
+                    <a href="#" class="developers-link">DEVELOPERS</a>
+                    <i class="bx bxs-chevron-down htmlcss-arrow arrow"></i>
+                    <ul class="htmlCss-sub-menu sub-menu">
+                        <li><a href="#">NEW DEVELOPERS</a></li>
+                        <li><a href="#">WHY BUILD ZERU</a></li>
+                        <li><a href="#">DEVELOPER TOOLS</a></li>
+                    </ul>
+                </li>
+                <li><a href="/blog">BLOG</a></li>
+                <li><a href="/aboutus">ABOUT US</a></li>
+                <li><a href="/contact">CONTACT US</a></li>
+                <li><a href="/support">SUPPORT</a></li>
+            </ul>
+            <!-- Profile image and dropdown -->
+            <div class="settings-container desktop">
+                <img src="" class="profile-image" alt="Profile Image" id="profile-image">
+                <ul class="settings-sub-menu sub-menu">
+                    <li><i class="bx bx-grid-alt"></i><a href="/dashboard">DASHBOARD</a></li>
+                    <li><i class="bx bx-user"></i><a href="/profile">PROFILE</a></li>
+                    <li><i class="bx"><span>🚪</span></i><a href="/logout">LOGOUT</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+    // Navigation logic
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+const profileImage = document.querySelector('#profile-image');
+const mobileProfileImage = document.querySelector('#mobile-profile-image');
+const settingsSubMenus = document.querySelectorAll('.settings-sub-menu');
+const developersLink = document.querySelector('.developers-link');
+const htmlCssSubMenu = document.querySelector('.htmlCss-sub-menu');
+
+hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    settingsSubMenus.forEach(menu => menu.classList.remove('active'));
+    htmlCssSubMenu.classList.remove('active');
+});
+
+developersLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    htmlCssSubMenu.classList.toggle('active');
+    settingsSubMenus.forEach(menu => menu.classList.remove('active'));
+});
+
+profileImage.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const desktopMenu = document.querySelector('.settings-container.desktop .settings-sub-menu');
+    desktopMenu.classList.toggle('active');
+    htmlCssSubMenu.classList.remove('active');
+});
+
+mobileProfileImage.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const mobileMenu = document.querySelector('.settings-container.mobile .settings-sub-menu');
+    mobileMenu.classList.toggle('active');
+    htmlCssSubMenu.classList.remove('active');
+});
+
+document.addEventListener('click', (e) => {
+    if (!profileImage.contains(e.target) && !mobileProfileImage.contains(e.target) && !Array.from(settingsSubMenus).some(menu => menu.contains(e.target))) {
+        settingsSubMenus.forEach(menu => menu.classList.remove('active'));
+    }
+    if (!developersLink.contains(e.target) && !htmlCssSubMenu.contains(e.target)) {
+        htmlCssSubMenu.classList.remove('active');
+    }
+});
+
+settingsSubMenus.forEach(menu => {
+    menu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            settingsSubMenus.forEach(m => m.classList.remove('active'));
+            navLinks.classList.remove('active');
+        });
+    });
+});
+
+htmlCssSubMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+        htmlCssSubMenu.classList.remove('active');
+        navLinks.classList.remove('active');
+    });
+});
+
+// Fetch user profile image (shared with main page)
+function fetchProfileImage() {
+    fetch(`${API_BASE_URL}/api/user`, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            const profileImage = document.getElementById('profile-image');
+            const mobileProfileImage = document.getElementById('mobile-profile-image');
+            const imageSrc = data.profile_image || 'https://via.placeholder.com/36?text=User';
+            profileImage.src = imageSrc;
+            mobileProfileImage.src = imageSrc;
+        })
+        .catch(err => {
+            console.error("Error fetching profile image:", err);
+            document.getElementById('profile-image').src = 'https://via.placeholder.com/36?text=User';
+            document.getElementById('mobile-profile-image').src = 'https://via.placeholder.com/36?text=User';
+        });
+}
+
+// Call fetchProfileImage on load if needed
+document.addEventListener('DOMContentLoaded', fetchProfileImage);
+</script>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons CDN -->
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Compromise NLP CDN -->
+    <script src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chatbot-toggle {
+            background: linear-gradient(135deg, #1A3C54 0%, #2A4B6A 100%);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-toggle i {
+            font-size: 28px;
+            color: #ADEFD1FF;
+        }
+
+        .chatbot-window {
+            display: none;
+            width: 350px;
+            height: 500px;
+            background: linear-gradient(180deg, rgb(0, 32, 63) 0%, rgb(0, 32, 63) 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            margin-top: 10px;
+            flex-direction: column;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #1A3C54 0%, #2A4B6A 100%);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-header h3 {
+            color: #ADEFD1FF;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .chatbot-header .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: rgb(0, 32, 63);
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message.bot {
+            align-items: flex-start;
+        }
+
+        .chat-message.user {
+            align-items: flex-end;
+        }
+
+        .chat-message .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-message.bot .message {
+            background: #2A4B6A;
+            color: #fff;
+        }
+
+        .chat-message.user .message {
+            background: #ADEFD1FF;
+            color: #000;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 10px;
+            background: rgb(0, 32, 63);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background: #1A3C54;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            background: #ADEFD1FF;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-input button i {
+            color: #000;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .chatbot-window {
+                width: 300px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-container">
+        <button class="chatbot-toggle" aria-label="Toggle chatbot">
+            <i class="bx bx-message-rounded"></i>
+        </button>
+        <div class="chatbot-window">
+            <div class="chatbot-header">
+                <h3>Z€RO Assistant</h3>
+                <button class="close-btn" aria-label="Close chatbot">&times;</button>
+            </div>
+            <div class="chatbot-body" id="chatbot-body">
+                <div class="chat-message bot">
+                    <div class="message">Hello! I'm Z€RO Assistant. How can I help you today?</div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Type your message..." autocomplete="off">
+                <button id="send-btn"><i class="bx bx-send"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chatbot state
+        let userData = null;
+
+        // DOM elements
+        const chatbotToggle = document.querySelector('.chatbot-toggle');
+        const chatbotWindow = document.querySelector('.chatbot-window');
+        const closeBtn = document.querySelector('.close-btn');
+        const chatbotBody = document.getElementById('chatbot-body');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        // Toggle chatbot window
+        chatbotToggle.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('active');
+            if (chatbotWindow.classList.contains('active') && !userData) {
+                fetchUserData();
+            }
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatbotWindow.classList.remove('active');
+        });
+
+        // Fetch user data from Flask API
+        async function fetchUserData() {
+            try {
+                const res = await fetch('/api/user');
+                if (!res.ok) throw new Error('Not logged in');
+                userData = await res.json();
+                // Check mining status for reminders
+                checkMiningReminder();
+            } catch (err) {
+                console.error("Error fetching user data:", err);
+                userData = null;
+                appendBotMessage("Please log in to access personalized features.");
+            }
+        }
+
+        // Append bot message to chat
+        function appendBotMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message bot';
+            messageDiv.innerHTML = `<div class="message">${message}</div>`;
+            chatbotBody.appendChild(messageDiv);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        }
+
+        // Append user message to chat
+        function appendUserMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message user';
+            messageDiv.innerHTML = `<div class="message">${message}</div>`;
+            chatbotBody.appendChild(messageDiv);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        }
+
+        // Process user input with simple NLP
+        function processInput(input) {
+            const doc = nlp(input.toLowerCase());
+            const terms = doc.terms().out('array');
+
+            // FAQ: Mining explanation
+            if (terms.includes('mining') && (terms.includes('kaam') || terms.includes('kare') || terms.includes('works'))) {
+                return `Mining tamara account ma coins add kare chhe har 24 hours ma 1 coin thi. Start karva mate /dashboard ma "Start Mining" button dabavo. Mining boost use karta double coins madi shake!`;
+            }
+
+            // FAQ: Timer reset
+            if (terms.includes('timer') && terms.includes('reset')) {
+                return `Timer har 24 hours ma reset thae chhe. Last mining thi 24 hours pachi tamare navi mining start kari shako. Check karo /dashboard ma remaining time.`;
+            }
+
+            // FAQ: Withdraw/Deposit
+            if ((terms.includes('withdraw') || terms.includes('deposit')) && terms.includes('coin')) {
+                return `Hali coin withdraw athva deposit feature available nathi. Bhavishya ma aa feature add thashe. Updates mate /blog check karo!`;
+            }
+
+            // Status: Coins mined
+            if (terms.includes('coin') && terms.includes('mine')) {
+                if (userData) {
+                    return `Tamare total ${userData.totalMined.toFixed(4)} coins mine karya chhe. Vadhare details mate /dashboard check karo!`;
+                }
+                return `Coins check karva mate login karo.`;
+            }
+
+            // Status: Mining status
+            if (terms.includes('mining') && terms.includes('status')) {
+                if (userData) {
+                    if (userData.miningActive) {
+                        const remaining = userData.miningTimeRemaining / 3600;
+                        return `Tamari mining active chhe! ${remaining.toFixed(2)} hours baki chhe.`;
+                    }
+                    return `Tamari mining bandh chhe. Navi mining start karo /dashboard ma!`;
+                }
+                return `Mining status check karva mate login karo.`;
+            }
+
+            // Referral: Referral ID
+            if (terms.includes('referral') && terms.includes('id')) {
+                if (userData) {
+                    return `Tamaro referral ID chhe: ${userData.referralId}. Share karo ane bonus coins kamao!`;
+                }
+                return `Referral ID check karva mate login karo.`;
+            }
+
+            // Referral: Benefits
+            if (terms.includes('referral') && terms.includes('benefit')) {
+                return `Referral thi tamare 7 thi 20 coins sudhi bonus madi shake har signup mate. Vadhare referrals, vadhare coins! Check karo /referrals.`;
+            }
+
+            // Technical Support: Login issues
+            if (terms.includes('login') && terms.includes('issue')) {
+                return `Login issue mate email ane password check karo. Password reset karva /login ma "Forgot Password" option use karo. Vadhare help mate /support visit karo.`;
+            }
+
+            // Technical Support: Password reset
+            if (terms.includes('password') && terms.includes('reset')) {
+                return `Password reset karva /login page par "Forgot Password" link par click karo ane tamara email ma instructions follow karo.`;
+            }
+
+            // Default response
+            return `Mane samajayu nathi. Please try again, e.g., "Mining kay rite kaam kare?" athva /support visit karo!`;
+        }
+
+        // Check for mining reminder
+        function checkMiningReminder() {
+            if (userData && !userData.miningActive && userData.lastMining) {
+                const lastMining = new Date(userData.lastMining * 1000);
+                const now = new Date();
+                const hoursSinceLast = (now - lastMining) / (1000 * 3600);
+                if (hoursSinceLast >= 24) {
+                    appendBotMessage("Tamari mining bandh chhe! /dashboard ma jai ne restart karo!");
+                }
+            }
+        }
+
+        // Handle motivational message on mining completion
+        async function checkMiningCompletion() {
+            if (userData && userData.miningActive && userData.miningTimeRemaining <= 0) {
+                await fetchUserData();
+                if (!userData.miningActive) {
+                    appendBotMessage(`Congrats! Tamare ${userData.totalMined.toFixed(4)} coins mine karya chhe! Navi mining start karo!`);
+                }
+            }
+        }
+
+        // Handle user input
+        async function handleInput() {
+            const input = chatbotInput.value.trim();
+            if (!input) return;
+
+            appendUserMessage(input);
+            chatbotInput.value = '';
+
+            const response = processInput(input);
+            appendBotMessage(response);
+
+            // Check for mining completion after each input
+            await checkMiningCompletion();
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', handleInput);
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleInput();
+        });
+
+        // Initialize chatbot
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchUserData();
+        });
+    </script>
+</body>
+</html>

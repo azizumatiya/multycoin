@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Google Fonts CDN Link -->
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap'
+        rel='stylesheet'>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Navbar CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Page - Z€RO Cryptocurrency</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px; /* Account for fixed navbar height */
+            background: linear-gradient(135deg, rgb(0, 32, 63) 0%, rgb(15, 76, 117) 50%, rgb(0, 32, 63) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(173, 239, 209, 0.05);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-10px) translateX(20px);
+            }
+        }
+
+        /* Live Crypto Prices Ticker */
+        .crypto-ticker {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 32, 63, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 10px 0;
+            z-index: 99;
+            border-bottom: 1px solid rgba(173, 239, 209, 0.2);
+            overflow: hidden;
+        }
+
+        .ticker-content {
+            display: flex;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .crypto-item {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            white-space: nowrap;
+        }
+
+        .crypto-item .name {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .crypto-item .price {
+            color: #ADEFD1FF;
+            margin-right: 10px;
+        }
+
+        .crypto-item .change {
+            font-size: 0.9rem;
+        }
+
+        .crypto-item .change.positive {
+            color: #4CAF50;
+        }
+
+        .crypto-item .change.negative {
+            color: #F44336;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 130px; /* Account for nav height + ticker */
+            padding-bottom: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ADEFD1FF;
+            font-size: 3.5rem;
+            margin: 40px 0 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, #ADEFD1FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Welcome Box */
+        .welcome-box {
+            overflow: hidden;
+            width: 100%;
+            height: 320px;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            margin: 30px 0;
+            background: linear-gradient(135deg, rgba(0, 32, 63, 0.9) 0%, rgba(26, 60, 84, 0.9) 100%);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            animation: slideInDown 1s ease-out;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 50px;
+            position: relative;
+            border: 1px solid rgba(173, 239, 209, 0.2);
+        }
+
+        .welcome-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjAyKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .welcome-box h2 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #ADEFD1FF;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-box p {
+            color: #FFFFFF;
+            font-size: 1.8rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin: 10px 0 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-icon {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 8rem;
+            color: rgba(173, 239, 209, 0.2);
+            z-index: 0;
+        }
+
+        /* Support Options */
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(173, 239, 209, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #5ca1e1, #ADEFD1FF);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .support-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .support-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: rgba(173, 239, 209, 0.3);
+        }
+
+        .support-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(173, 239, 209, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            box-shadow: 0 10px 20px rgba(173, 239, 209, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .support-card:hover .support-icon {
+            background: rgba(173, 239, 209, 0.2);
+            transform: scale(1.05);
+        }
+
+        .support-icon i {
+            font-size: 2.5rem;
+            color: #ADEFD1FF;
+        }
+
+        .support-card h3 {
+            color: #ADEFD1FF;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .support-card p {
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .support-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #5ca1e1, #ADEFD1FF);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .support-btn:hover::before {
+            left: 100%;
+        }
+
+        .support-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            color: #FFFFFF;
+            background: rgba(0, 32, 63, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 40px;
+            padding: 40px 30px;
+            border: 1px solid rgba(173, 239, 209, 0.1);
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #ADEFD1FF;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .faq-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 4px;
+            background: linear-gradient(90deg, #ADEFD1FF, transparent);
+            border-radius: 2px;
+        }
+
+        .faq-category {
+            margin-bottom: 40px;
+        }
+
+        .faq-category h3 {
+            font-size: 1.8rem;
+            color: #ADEFD1FF;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(173, 239, 209, 0.2);
+        }
+
+        details {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(173, 239, 209, 0.2);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        details:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        summary {
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.3em;
+            color: #ADEFD1FF;
+            list-style: none;
+            position: relative;
+            padding-right: 30px;
+            transition: color 0.3s ease;
+        }
+
+        summary:hover {
+            color: #FFFFFF;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            font-size: 1.8em;
+            color: #4299E1;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        details[open] summary::after {
+            transform: rotate(45deg);
+            color: #ADEFD1FF;
+        }
+
+        details[open] {
+            border-color: #4299E1;
+            background-color: rgba(66, 153, 225, 0.15);
+            transform: scale(1.02);
+        }
+
+        details[open] summary {
+            color: #FFFFFF;
+        }
+
+        p {
+            margin: 20px 0 0;
+            font-size: 1rem;
+            color: #E5E7EB;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            text-align: center;
+            border: 1px solid rgba(173, 239, 209, 0.1);
+        }
+
+        .contact-section h2 {
+            font-size: 2.5rem;
+            color: #ADEFD1FF;
+            margin-bottom: 20px;
+        }
+
+        .contact-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: linear-gradient(90deg, #5ca1e1, #ADEFD1FF);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .contact-btn:hover::before {
+            left: 100%;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+                background-attachment: scroll;
+                padding: 10px;
+            }
+
+            .main-content {
+                padding-top: 120px;
+            }
+
+            .content {
+                padding: 10px;
+            }
+
+            .welcome-box {
+                height: 220px;
+                margin: 15px 0;
+                border-radius: 20px;
+                padding: 0 25px;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            .welcome-box h2 {
+                font-size: 2rem;
+            }
+
+            .welcome-box p {
+                font-size: 1.3rem;
+            }
+
+            .welcome-icon {
+                display: none;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+                margin: 20px 0;
+            }
+
+            .support-options {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .faq-section {
+                margin: 0;
+                padding: 20px 15px;
+                border-radius: 15px;
+            }
+
+            .faq-section h2 {
+                font-size: 2rem;
+            }
+
+            .faq-category h3 {
+                font-size: 1.5rem;
+            }
+
+            details {
+                padding: 20px;
+                margin-bottom: 15px;
+                border-radius: 12px;
+            }
+
+            summary {
+                font-size: 1.2em;
+                padding-right: 25px;
+            }
+
+            summary::after {
+                font-size: 1.6em;
+                right: 5px;
+            }
+
+            p {
+                font-size: 1em;
+                margin: 15px 0 0;
+            }
+
+            .contact-section {
+                padding: 30px 20px;
+            }
+
+            .contact-section h2 {
+                font-size: 2rem;
+            }
+
+            .contact-section p {
+                font-size: 1.1rem;
+            }
+
+            .contact-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .crypto-ticker {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-box h2 {
+                font-size: 1.6rem;
+            }
+
+            .welcome-box p {
+                font-size: 1.1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .faq-section {
+                padding: 15px 10px;
+            }
+
+            .faq-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .faq-category h3 {
+                font-size: 1.3rem;
+            }
+
+            details {
+                padding: 15px;
+            }
+
+            summary {
+                font-size: 1.1em;
+            }
+
+            p {
+                font-size: 0.95em;
+            }
+
+            .contact-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .contact-section p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg" id="animatedBg"></div>
+
+    {% include 'navbar.html' %}
+
+    <!-- Live Crypto Prices Ticker -->
+    <div class="crypto-ticker">
+        <div class="ticker-content">
+            <div class="crypto-item">
+                <span class="name">BTC</span>
+                <span class="price">$45,230.50</span>
+                <span class="change positive">+2.35%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">ETH</span>
+                <span class="price">$3,125.75</span>
+                <span class="change positive">+1.82%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">BNB</span>
+                <span class="price">$415.30</span>
+                <span class="change negative">-0.75%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">ADA</span>
+                <span class="price">$1.25</span>
+                <span class="change positive">+3.45%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">SOL</span>
+                <span class="price">$105.60</span>
+                <span class="change positive">+5.20%</span>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="crypto-item">
+                <span class="name">BTC</span>
+                <span class="price">$45,230.50</span>
+                <span class="change positive">+2.35%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">ETH</span>
+                <span class="price">$3,125.75</span>
+                <span class="change positive">+1.82%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">BNB</span>
+                <span class="price">$415.30</span>
+                <span class="change negative">-0.75%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">ADA</span>
+                <span class="price">$1.25</span>
+                <span class="change positive">+3.45%</span>
+            </div>
+            <div class="crypto-item">
+                <span class="name">SOL</span>
+                <span class="price">$105.60</span>
+                <span class="change positive">+5.20%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content">
+            <div class="welcome-box" data-aos="fade-up">
+                <h2>Welcome to Z€RO Support Page</h2>
+                <p>Follow steps below to find resources that may answer your support needs</p>
+                <i class='bx bx-support welcome-icon'></i>
+            </div>
+            <h1 data-aos="fade-up">Support</h1>
+
+            <!-- Support Options -->
+            <div class="support-options">
+                <div class="support-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="support-icon">
+                        <i class='bx bx-book-open'></i>
+                    </div>
+                    <h3>Knowledge Base</h3>
+                    <p>Browse our comprehensive library of articles and guides to find answers to common questions.</p>
+                    <a href="#" class="support-btn">Browse Articles</a>
+                </div>
+
+                <div class="support-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="support-icon">
+                        <i class='bx bx-chat'></i>
+                    </div>
+                    <h3>Live Chat</h3>
+                    <p>Connect with our support team instantly through our live chat service for immediate assistance.</p>
+                    <a href="#" class="support-btn">Start Chat</a>
+                </div>
+
+                <div class="support-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="support-icon">
+                        <i class='bx bx-envelope'></i>
+                    </div>
+                    <h3>Email Support</h3>
+                    <p>Send us a detailed message and our support team will get back to you within 24 hours.</p>
+                    <a href="#" class="support-btn">Send Email</a>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section" data-aos="fade-up">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-category">
+                    <h3>Getting Started</h3>
+                    <details>
+                        <summary>How do I create a Z€RO account?</summary>
+                        <p>Creating a Z€RO account is simple. Just click on the "Sign Up" button on our homepage, fill in your details, and verify your email address. Once verified, you can start mining Z€RO immediately.</p>
+                    </details>
+                    <details>
+                        <summary>Is Z€RO mining really free?</summary>
+                        <p>Yes, Z€RO is completely free to mine on mobile devices. We believe in making cryptocurrency accessible to everyone, regardless of their technical expertise or financial status.</p>
+                    </details>
+                </div>
+
+                <div class="faq-category">
+                    <h3>Mining & Earnings</h3>
+                    <details>
+                        <summary>How often can I mine Z€RO?</summary>
+                        <p>You can mine 1 Z€RO coin every 24 hours. Additionally, you can activate a mining boost once per day to earn 2 coins during a 30-minute window.</p>
+                    </details>
+                    <details>
+                        <summary>How do I withdraw my mined coins?</summary>
+                        <p>You can withdraw your mined coins by navigating to the wallet section of your dashboard. Simply enter your wallet address and the amount you wish to withdraw, then confirm the transaction.</p>
+                    </details>
+                </div>
+
+                <div class="faq-category">
+                    <h3>Referral Program</h3>
+                    <details>
+                        <summary>How does the referral program work?</summary>
+                        <p>Our referral program allows you to earn 7 to 20 coins for each new user who signs up using your unique referral ID. You can find your referral ID in the referrals section of your dashboard.</p>
+                    </details>
+                    <details>
+                        <summary>Is there a limit to how many people I can refer?</summary>
+                        <p>No, there's no limit to the number of people you can refer. The more friends you invite, the more you earn!</p>
+                    </details>
+                </div>
+
+                <div class="faq-category">
+                    <h3>Technical Issues</h3>
+                    <details>
+                        <summary>Why is the mining button not working?</summary>
+                        <p>If the mining button isn't working, it could be due to a poor internet connection, browser issues, or you may have already mined your daily coin. Try refreshing the page or checking your internet connection.</p>
+                    </details>
+                    <details>
+                        <summary>I forgot my password. How can I reset it?</summary>
+                        <p>Click on the "Forgot Password" link on the login page. Enter your email address and we'll send you instructions to reset your password.</p>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="contact-section" data-aos="fade-up">
+                <h2>Still Need Help?</h2>
+                <p>Our support team is here to assist you with any questions or issues you may have.</p>
+                <div class="contact-buttons">
+                    <a href="#" class="contact-btn">
+                        <i class='bx bx-support'></i>
+                        Contact Support
+                    </a>
+                    <a href="#" class="contact-btn">
+                        <i class='bx bx-group'></i>
+                        Join Community
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar JS -->
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Create animated background circles
+        function createAnimatedBackground() {
+            const animatedBg = document.getElementById('animatedBg');
+            const circleCount = 15;
+            
+            for (let i = 0; i < circleCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Random position
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                circle.style.animationDuration = `${Math.random() * 20 + 20}s`;
+                circle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                animatedBg.appendChild(circle);
+            }
+        }
+
+        // Simulate live crypto price updates
+        function updateCryptoPrices() {
+            const cryptoItems = document.querySelectorAll('.crypto-item');
+            
+            cryptoItems.forEach(item => {
+                const priceElement = item.querySelector('.price');
+                const changeElement = item.querySelector('.change');
+                
+                // Get current price
+                let currentPrice = parseFloat(priceElement.textContent.replace('$', '').replace(',', ''));
+                
+                // Random change between -3% and +3%
+                const changePercent = (Math.random() * 6 - 3).toFixed(2);
+                const newPrice = currentPrice * (1 + changePercent / 100);
+                
+                // Update price
+                priceElement.textContent = `$${newPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                
+                // Update change
+                changeElement.textContent = `${changePercent > 0 ? '+' : ''}${changePercent}%`;
+                changeElement.className = `change ${changePercent > 0 ? 'positive' : 'negative'}`;
+            });
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createAnimatedBackground();
+            
+            // Update crypto prices every 5 seconds
+            setInterval(updateCryptoPrices, 5000);
+        });
+    </script>
+</body>
+
+</html>

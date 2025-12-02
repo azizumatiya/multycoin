@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Z€RO Crypto Mining</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --dark: #0a0e27;
+            --darker: #050714;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --card-bg: rgba(26, 32, 53, 0.7);
+            --sidebar-bg: rgba(15, 23, 42, 0.9);
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(67, 97, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(67, 97, 238, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: bgMove 20s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
+            filter: blur(2px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(10px) translateX(-10px); }
+            75% { transform: translateY(-10px) translateX(20px); }
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .sidebar-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--light);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 260px;
+            transition: all 0.3s ease;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            max-width: 600px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar-container {
+            position: relative;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid transparent;
+            background: linear-gradient(var(--dark), var(--dark)) padding-box,
+                        linear-gradient(135deg, var(--primary), var(--accent)) border-box;
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.4);
+        }
+
+        .upload-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .upload-overlay:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.5);
+        }
+
+        .upload-overlay i {
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .profile-info h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(6, 255, 165, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(6, 255, 165, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 255, 165, 0); }
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(251, 86, 7, 0.3);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.primary {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--primary);
+        }
+
+        .stat-icon.success {
+            background: rgba(6, 255, 165, 0.15);
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(255, 190, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .stat-icon.danger {
+            background: rgba(251, 86, 7, 0.15);
+            color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--light);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Profile Details */
+        .profile-details {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .profile-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row:hover {
+            padding-left: 10px;
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 8px;
+            margin: 0 -10px;
+            padding-right: 10px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-label i {
+            width: 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .edit-btn {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-btn:hover {
+            background: rgba(67, 97, 238, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        /* Referral Table */
+        .referral-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .referral-table th,
+        .referral-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .referral-table th {
+            background: rgba(67, 97, 238, 0.1);
+            font-weight: 600;
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+
+        .referral-table td {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+
+        .referral-table tr:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .bonus-amount {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .no-referrals {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Transactions List */
+        .transactions-list {
+            list-style: none;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 8px;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .transaction-details h4 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .transaction-date {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .amount-positive {
+            color: var(--success);
+        }
+
+        .amount-negative {
+            color: var(--danger);
+        }
+
+        /* Achievement Badges */
+        .achievements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Mobile Navigation */
+        .mobile-top-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            /* background: var(--sidebar-bg);
+            backdrop-filter: blur(10px); */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-top-bar .home-link {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .mobile-top-bar .home-link i {
+            margin-right: 8px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav a span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .bottom-nav a.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav a:hover {
+            color: var(--light);
+            transform: translateY(-3px);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-menu li {
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .side-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .side-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .side-menu a:hover {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+            padding-left: 25px;
+        }
+
+        .side-menu i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .menu-overlay.open {
+            display: block;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            color: var(--light);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        #toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        #toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        #toast i {
+            font-size: 1.2rem;
+        }
+
+        #toast.success i {
+            color: var(--success);
+        }
+
+        #toast.error i {
+            color: var(--danger);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-top-bar {
+                display: flex;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .bottom-nav {
+                display: flex;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-card {
+                padding: 20px;
+            }
+            
+            .profile-details {
+                padding: 20px;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .edit-btn {
+                align-self: flex-end;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .profile-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* Edit Profile Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--light);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        /* Password Change Modal */
+        #password-modal .form-group {
+            margin-bottom: 15px;
+        }
+
+        #password-modal .form-input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-grid"></div>
+        <div id="circles-container"></div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <span>Z€RO</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+                <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+                <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+                <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+                <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="/help"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+                <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">User Profile</h1>
+                <p class="page-subtitle">Manage your account information and preferences</p>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-left">
+                        <div class="avatar-container">
+                            <img id="profile-image" src="https://via.placeholder.com/100" alt="Profile Image" class="avatar">
+                            <div class="upload-overlay" onclick="document.getElementById('image-upload').click()">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profile-name">Loading...</h2>
+                            <div class="profile-status">
+                                <span class="status-dot"></span>
+                                <span id="streak-display">Active Streak: 0 days</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-value" id="total-coins">0</div>
+                        <div class="stat-label">Total Coins</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-value" id="active-streak">0</div>
+                        <div class="stat-label">Active Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-value" id="referral-count">0</div>
+                        <div class="stat-label">Referrals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="member-days">0</div>
+                        <div class="stat-label">Member Days</div>
+                    </div>
+                </div>
+
+                <!-- Achievement Badges -->
+                <div class="achievements" id="achievements">
+                    <span class="badge">New User</span>
+                    <!-- Dynamic badges will be added here -->
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div class="profile-details">
+                <h3 class="section-title">
+                    <i class="fas fa-user-circle"></i>
+                    Account Information
+                </h3>
+                
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="fas fa-user"></i>
+                        <span>Username</span>
+                    </div>
+                    <div class="detail-value" id="username-display">
+                        <div class="loading"></div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </div>
+                    <div class="detail-value" id="email-display">
+                        <div class="loading"></div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="fas fa-id-card"></i>
+                        <span>User ID</span>
+                    </div>
+                    <div class="detail-value" id="user-id-display">
+                        <div class="loading"></div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Member Since</span>
+                    </div>
+                    <div class="detail-value" id="member-since-display">
+                        <div class="loading"></div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Account Status</span>
+                    </div>
+                    <div class="detail-value">
+                        <span class="text-green-500">Verified</span>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="fas fa-key"></i>
+                        <span>Password</span>
+                    </div>
+                    <div class="detail-value">
+                        <button class="edit-btn" onclick="openPasswordModal()">
+                            <i class="fas fa-edit"></i>
+                            <span>Change Password</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referred Users -->
+            <div class="profile-details">
+                <h3 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Referred Users
+                </h3>
+                <table class="referral-table" id="referral-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Join Date</th>
+                            <th>Bonus Earned</th>
+                        </tr>
+                    </thead>
+                    <tbody id="referral-body">
+                        <tr>
+                            <td colspan="3" class="no-referrals">No referrals yet. Share your link!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="profile-details">
+                <h3 class="section-title">
+                    <i class="fas fa-history"></i>
+                    Recent Transactions
+                </h3>
+                <ul class="transactions-list" id="transactions-list">
+                    <li class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon primary">
+                                <i class="fas fa-circle-notch"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>Loading...</h4>
+                                <p class="transaction-date">Loading...</p>
+                            </div>
+                        </div>
+                        <div class="transaction-amount amount-positive">+0.00</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar">
+        <a href="/home1" class="home-link">
+            <!-- <i class="fas fa-coins"></i>
+            <span>Z€RO</span> -->
+        </a>
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="/desh1"><span><i class="fas fa-home"></i></span><span>Home</span></a>
+        <a href="/statistics"><span><i class="fas fa-chart-line"></i></span><span>Stats</span></a>
+        <a href="/gift"><span><i class="fas fa-gift"></i></span><span>Gift</span></a>
+        <a href="/speen"><span><i class="fas fa-sync-alt"></i></span><span>Spin</span></a>
+        <a href="/profile" class="active"><span><i class="fas fa-user"></i></span><span>Profile</span></a>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="side-menu">
+        <ul>
+            <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+            <li><a href="/statistics"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+            <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+            <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+            <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            <li><a href="/help"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+            <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="edit-form">
+                <div class="form-group">
+                    <label class="form-label" for="edit-username">Username</label>
+                    <input type="text" id="edit-username" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-email">Email</label>
+                    <input type="email" id="edit-email" class="form-input" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Password Change Modal -->
+    <div class="modal" id="password-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Password</h3>
+                <button class="close-btn" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <form id="password-form">
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" id="current-password" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" id="new-password" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" id="confirm-password" class="form-input" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Base URL for API calls - Dynamic based on current origin
+        const API_BASE_URL = window.location.origin;
+
+        let userData = {};
+
+        // Create animated background circles
+        function createAnimatedBackground() {
+            const container = document.getElementById('circles-container');
+            const circleCount = 15;
+            
+            for (let i = 0; i < circleCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Random position
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                circle.style.animationDuration = `${Math.random() * 20 + 20}s`;
+                circle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(circle);
+            }
+        }
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideMenu = document.getElementById('side-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sideMenu.classList.toggle('open');
+                menuOverlay.classList.toggle('open');
+            });
+        }
+
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', () => {
+                sideMenu.classList.remove('open');
+                menuOverlay.classList.remove('open');
+            });
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            
+            const toastMessage = document.getElementById('toast-message');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toast.innerHTML = '<i class="fas fa-check-circle"></i><span id="toast-message">' + message + '</span>';
+            } else {
+                toast.innerHTML = '<i class="fas fa-exclamation-circle"></i><span id="toast-message">' + message + '</span>';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Fetch user data
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/user`, {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = '/login';
+                        return;
+                    }
+                    throw new Error('Failed to fetch user data');
+                }
+                
+                const data = await response.json();
+                userData = data;
+                
+                // Update profile information
+                const usernameDisplay = document.getElementById('username-display');
+                const profileName = document.getElementById('profile-name');
+                const emailDisplay = document.getElementById('email-display');
+                const userIdDisplay = document.getElementById('user-id-display');
+                const totalCoins = document.getElementById('total-coins');
+                const activeStreak = document.getElementById('active-streak');
+                const referralCount = document.getElementById('referral-count');
+                const streakDisplay = document.getElementById('streak-display');
+                
+                if (usernameDisplay) usernameDisplay.textContent = data.name || data.username || 'Unknown';
+                if (profileName) profileName.textContent = data.name || data.username || 'Unknown';
+                if (emailDisplay) emailDisplay.textContent = data.email;
+                if (userIdDisplay) userIdDisplay.textContent = data.user_id || 'N/A';
+                if (totalCoins) totalCoins.textContent = data.balance ? data.balance.toFixed(2) : '0.00';
+                if (activeStreak) activeStreak.textContent = data.activeStreak || 0;
+                if (referralCount) referralCount.textContent = data.referralCount || 0;
+                if (streakDisplay) streakDisplay.textContent = `Active Streak: ${data.activeStreak || 0} days`;
+                
+                // Set member since date and calculate days
+                const memberSinceDisplay = document.getElementById('member-since-display');
+                const memberDays = document.getElementById('member-days');
+                if (data.created_at && memberSinceDisplay) {
+                    const created = new Date(data.created_at * 1000);
+                    memberSinceDisplay.textContent = created.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    const now = new Date();
+                    const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+                    if (memberDays) memberDays.textContent = days;
+                } else {
+                    if (memberSinceDisplay) memberSinceDisplay.textContent = 'Unknown';
+                    if (memberDays) memberDays.textContent = '0';
+                }
+
+                // Update profile image
+                const profileImage = document.getElementById('profile-image');
+                if (data.profile_image) {
+                    profileImage.src = data.profile_image;
+                } else {
+                    profileImage.src = 'https://via.placeholder.com/140';
+                }
+                
+                // Update form fields
+                document.getElementById('edit-username').value = data.name || data.username || '';
+                document.getElementById('edit-email').value = data.email || '';
+
+                // Update achievements
+                updateAchievements(data);
+
+                // Update referred users table
+                updateReferredUsers(data.referredUsers || []);
+
+                // Update recent transactions
+                updateRecentTransactions(data.transactions || []);
+                
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                showToast('Failed to load user data.', 'error');
+            }
+        }
+
+        // Update achievements based on user data
+        function updateAchievements(data) {
+            const achievements = document.getElementById('achievements');
+            if (!achievements) return;
+            
+            achievements.innerHTML = '';
+            if (data.level === 1) {
+                achievements.innerHTML += '<span class="badge">New User</span>';
+            }
+            if (data.activeStreak >= 7) {
+                achievements.innerHTML += '<span class="badge">Streak Master</span>';
+            }
+            if (data.referralCount >= 5) {
+                achievements.innerHTML += '<span class="badge">Referral Pro</span>';
+            }
+            if (achievements.innerHTML === '') {
+                achievements.innerHTML = '<span class="badge">Getting Started</span>';
+            }
+        }
+
+        // Update referred users table
+        function updateReferredUsers(referredUsers) {
+            const referralBody = document.getElementById('referral-body');
+            if (!referralBody) return;
+            
+            if (referredUsers.length > 0) {
+                referralBody.innerHTML = '';
+                referredUsers.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.name || 'Unknown'}</td>
+                        <td>${new Date(user.joinDate).toLocaleDateString()}</td>
+                        <td class="bonus-amount">+${user.bonus ? user.bonus.toFixed(2) : '0.00'}</td>
+                    `;
+                    referralBody.appendChild(row);
+                });
+            } else {
+                referralBody.innerHTML = '<tr><td colspan="3" class="no-referrals">No referrals yet. Share your link!</td></tr>';
+            }
+        }
+
+        // Update recent transactions
+        function updateRecentTransactions(transactions) {
+            const transactionsList = document.getElementById('transactions-list');
+            if (!transactionsList) return;
+            
+            transactionsList.innerHTML = '';
+            if (transactions.length === 0) {
+                transactionsList.innerHTML = '<li class="transaction-item"><div style="text-align: center; width: 100%; color: rgba(255, 255, 255, 0.7);">No recent transactions</div></li>';
+                return;
+            }
+            
+            // Show last 5 transactions
+            const recent = transactions.slice(-5).reverse();
+            recent.forEach(tx => {
+                const li = document.createElement('li');
+                li.className = 'transaction-item';
+                
+                const typeClass = tx.type === 'BONUS' ? 'success' : 'primary';
+                const amountClass = tx.amount > 0 ? 'amount-positive' : 'amount-negative';
+                const icon = tx.type === 'BONUS' ? 'fa-gift' : 'fa-coins';
+                
+                li.innerHTML = `
+                    <div class="transaction-info">
+                        <div class="transaction-icon ${typeClass}">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>${tx.type}</h4>
+                            <p class="transaction-date">${new Date(tx.date).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${amountClass}">${tx.amount > 0 ? '+' : ''}${tx.amount.toFixed(4)}</div>
+                `;
+                transactionsList.appendChild(li);
+            });
+        }
+
+        // Handle image upload
+        async function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showToast('Please upload an image file.', 'error');
+                return;
+            }
+
+            // Validate file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('Image size must be less than 2MB.', 'error');
+                return;
+            }
+
+            // Convert image to base64
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Image = e.target.result;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/upload-profile-image`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ image: base64Image }),
+                        credentials: 'include'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.error) {
+                        showToast(result.error, 'error');
+                    } else {
+                        showToast('Profile image uploaded successfully!');
+                        // Refresh user data to update image
+                        fetchUserData();
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    showToast('Failed to upload image.', 'error');
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await fetch(`${API_BASE_URL}/logout`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Edit profile modal functions
+        function openEditModal() {
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+        }
+
+        // Handle edit form submission
+        document.getElementById('edit-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('edit-username').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/update-settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    showToast(result.error, 'error');
+                } else {
+                    showToast('Profile updated successfully!');
+                    fetchUserData();
+                    closeEditModal();
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Failed to update profile.', 'error');
+            }
+        });
+
+        // Password modal functions
+        function openPasswordModal() {
+            document.getElementById('password-modal').classList.add('active');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('password-modal').classList.remove('active');
+        }
+
+        // Handle password form submission (stub - implement backend if needed)
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const current = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirm = document.getElementById('confirm-password').value;
+            
+            if (newPass !== confirm) {
+                showToast('Passwords do not match!', 'error');
+                return;
+            }
+            
+            // TODO: Implement password change API
+            showToast('Password change feature coming soon!', 'success');
+            closePasswordModal();
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createAnimatedBackground();
+            fetchUserData();
+        });
+    </script>
+</body>
+</html>

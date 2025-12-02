@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/static/image/asd.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            background-color: rgb(0, 32, 63);
+        }
+        .logo {
+            font-size: 50px;
+            margin-left: 130px;
+            color: #fff;
+            font-weight: 600;
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links li {
+            padding: 0 14px;
+        }
+        .nav-links li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .coin-image {
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            position: fixed;
+        }
+        .coin-image img {
+            width: 90%;
+        }
+        .form-container {
+            top: 50%;
+            margin-left: 50%;
+            padding: 40px;
+            border-radius: 10px;
+            color: white;
+            width: 400px;
+        }
+        .form-container h2 {
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+        .form-container button {
+            background-color: #0ebac5;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .form-container label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            display: block;
+        }
+        .error-message {
+            color: red;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .info-message {
+            color: #0ebac5;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Z€RO</div>
+        <ul class="nav-links">
+            <li><a href="/static/screen/ihome.html">HOME</a></li>
+            <li><a href="#">DEVELOPERS</a></li>
+            <li><a href="/static/screen/blog.html">BLOG</a></li>
+            <li><a href="/static/screen/aboutus.html">ABOUT US</a></li>
+            <li><a href="/static/screen/contect.html">CONTACT US</a></li>
+            <li><a href="/static/screen/support.html">SUPPORT</a></li>
+        </ul>
+    </nav>
+    <div class="coin-image">
+        <img src="/static/image/coin1.png" alt="coin">
+    </div>
+    <div class="form-container">
+        <h2>Verify OTP</h2>
+        {% if message %}
+            <div class="error-message">{{ message }}</div>
+        {% endif %}
+        <div class="info-message">An OTP has been sent to {{ email }}. Please enter it below.</div>
+        <form method="POST" action="/verify-otp">
+            <input type="hidden" name="email" value="{{ email }}">
+            <label for="otp">OTP:</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter 6-digit OTP" required>
+            <button type="submit">Verify</button>
+        </form>
+        <form method="POST" action="/resend-otp">
+            <input type="hidden" name="email" value="{{ email }}">
+            <button type="submit">Resend OTP</button>
+        </form>
+    </div>
+</body>
+</html>

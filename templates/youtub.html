@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-4">YouTube Video Downloader</h1>
+        <div class="mb-4">
+            <label for="url" class="block text-sm font-medium text-gray-700">YouTube URL</label>
+            <input type="text" id="url" placeholder="https://youtu.be/..." class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="mb-4">
+            <label for="resolution" class="block text-sm font-medium text-gray-700">Resolution</label>
+            <select id="resolution" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="1080p">1080p</option>
+                <option value="4k">4K</option>
+            </select>
+        </div>
+        <button onclick="downloadVideo()" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2">Download</button>
+        <button onclick="checkServer()" class="w-full bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">Check Server</button>
+        <p id="status" class="mt-4 text-center text-sm text-gray-600"></p>
+    </div>
+
+    <script>
+        async function downloadVideo() {
+            const url = document.getElementById('url').value;
+            const resolution = document.getElementById('resolution').value;
+            const status = document.getElementById('status');
+
+            if (!url) {
+                status.textContent = 'Please enter a YouTube URL';
+                status.classList.add('text-red-500');
+                return;
+            }
+
+            status.textContent = 'Downloading...';
+            status.classList.remove('text-red-500', 'text-green-500');
+            status.classList.add('text-blue-500');
+
+            try {
+                const response = await fetch('http://localhost:5000/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, resolution })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    status.textContent = `Success: ${data.filename} downloaded!`;
+                    status.classList.add('text-green-500');
+                } else {
+                    status.textContent = `Error: ${data.error}`;
+                    status.classList.add('text-red-500');
+                }
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                status.classList.add('text-red-500');
+            }
+        }
+
+        async function checkServer() {
+            const status = document.getElementById('status');
+            status.textContent = 'Checking server...';
+            status.classList.remove('text-red-500', 'text-green-500');
+            status.classList.add('text-blue-500');
+
+            try {
+                const response = await fetch('http://localhost:5000/health');
+                const data = await response.json();
+                if (response.ok) {
+                    status.textContent = data.status;
+                    status.classList.add('text-green-500');
+                } else {
+                    status.textContent = `Server error: ${data.error}`;
+                    status.classList.add('text-red-500');
+                }
+            } catch (error) {
+                status.textContent = `Server not reachable: ${error.message}`;
+                status.classList.add('text-red-500');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Mining Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        const App = () => {
+            const [miningActive, setMiningActive] = useState(false);
+            const [timer, setTimer] = useState("05:00");
+
+            const handleStartMining = () => {
+                setMiningActive(true);
+            };
+
+            const handleClaimBonus = () => {
+                alert("Bonus claimed!");
+            };
+
+            return (
+                <div className="flex min-h-screen">
+                    {/* Sidebar Navigation */}
+                    <div className="w-1/5 bg-gray-800 p-4 rounded-lg m-4">
+                        <h2 className="text-lg font-bold mb-4">DASHBOARD</h2>
+                        <ul className="space-y-4">
+                            <li className="flex items-center space-x-2">
+                                <span>🏠</span>
+                                <span>Dashboard</span>
+                            </li>
+                            <li className="flex items-center space-x-2">
+                                <span>📊</span>
+                                <span>Statistics</span>
+                            </li>
+                            <li className="flex items-center space-x-2">
+                                <span>🛒</span>
+                                <span>Shop</span>
+                            </li>
+                            <li className="flex items-center space-x-2">
+                                <span>👥</span>
+                                <span>Referrals</span>
+                            </li>
+                            <li className="flex items-center space-x-2">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </li>
+                            <li className="flex items-center space-x-2">
+                                <span>❓</span>
+                                <span>Help</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="flex-1 p-4">
+                        <div className="flex space-x-4 mb-4">
+                            {/* User Profile */}
+                            <div className="bg-gray-800 p-4 rounded-lg w-1/3">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xl">😊</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold">CryptoMiner</h3>
+                                        <p className="text-sm">LEVEL 5</p>
+                                    </div>
+                                </div>
+                                <div className="mt-2">
+                                    <p className="text-sm">EXP: 450 / 1,000 needed</p>
+                                    <div className="w-full bg-gray-700 rounded-full h-2">
+                                        <div className="bg-purple-500 h-2 rounded-full" style={{ width: "45%" }}></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Balance */}
+                            <div className="bg-gray-800 p-4 rounded-lg w-1/3">
+                                <h3 className="text-lg font-bold">YOUR BALANCE</h3>
+                                <p className="text-2xl">2.4125 COINS</p>
+                                <p className="text-sm text-green-400">Mining rate: 0.55 coins/min</p>
+                            </div>
+
+                            {/* Mining Status */}
+                            <div className="bg-gray-800 p-4 rounded-lg w-1/3">
+                                <h3 className="text-lg font-bold">MINING STATUS</h3>
+                                <p className="text-sm">{miningActive ? "Mining active" : "Mining inactive"}</p>
+                                <p className="text-xl">{timer}</p>
+                                <button
+                                    className="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg"
+                                    onClick={handleStartMining}
+                                    disabled={miningActive}
+                                >
+                                    Start Mining
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex space-x-4">
+                            {/* Transaction History */}
+                            <div className="bg-gray-800 p-4 rounded-lg w-2/3">
+                                <h3 className="text-lg font-bold mb-4">TRANSACTION HISTORY</h3>
+                                <div className="flex space-x-4 mb-4">
+                                    <button className="bg-gray-700 px-4 py-1 rounded-lg">ALL</button>
+                                    <button className="bg-gray-700 px-4 py-1 rounded-lg">Mining</button>
+                                    <button className="bg-gray-700 px-4 py-1 rounded-lg">Bonuses</button>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-yellow-400">BONUS</span>
+                                        <span>May 1, 2025, 04:55 PM</span>
+                                        <span className="text-green-400">+0.7147</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-yellow-400">BONUS</span>
+                                        <span>May 1, 2025, 04:55 PM</span>
+                                        <span className="text-green-400">+0.7132</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-yellow-400">BONUS</span>
+                                        <span>May 1, 2025, 04:55 PM</span>
+                                        <span className="text-green-400">+0.9846</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-blue-400">Mining</span>
+                                        <span>May 1, 2025, 03:44 PM</span>
+                                        <span className="text-green-400">+0.1671</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-blue-400">Mining</span>
+                                        <span>May 1, 2025, 03:44 PM</span>
+                                        <span className="text-green-400">+0.5279</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Column */}
+                            <div className="w-1/3 space-y-4">
+                                {/* Daily Bonus */}
+                                <div className="bg-gray-800 p-4 rounded-lg">
+                                    <h3 className="text-lg font-bold">DAILY BONUS</h3>
+                                    <p className="text-sm">Claim your daily bonus to boost your mining rewards!</p>
+                                    <button
+                                        className="mt-2 bg-yellow-500 text-black px-4 py-2 rounded-lg"
+                                        onClick={handleClaimBonus}
+                                    >
+                                        Claim Bonus
+                                    </button>
+                                </div>
+
+                                {/* Mining Stats */}
+                                <div className="bg-gray-800 p-4 rounded-lg">
+                                    <h3 className="text-lg font-bold mb-4">MINING STATS</h3>
+                                    <div className="flex justify-between">
+                                        <div className="flex items-center space-x-2">
+                                            <span>📈</span>
+                                            <div>
+                                                <p className="text-sm">TOTAL MINED</p>
+                                                <p className="text-lg">6.3871</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <span>⏱️</span>
+                                            <div>
+                                                <p className="text-sm">MINING TIME</p>
+                                                <p className="text-lg">6H</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <span>🏆</span>
+                                            <div>
+                                                <p className="text-sm">LEVEL</p>
+                                                <p className="text-lg">5</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

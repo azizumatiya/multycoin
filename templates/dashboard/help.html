@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & FAQ - Z€RO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --dark: #0a0e27;
+            --darker: #050714;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --card-bg: rgba(26, 32, 53, 0.7);
+            --sidebar-bg: rgba(15, 23, 42, 0.9);
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(67, 97, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(67, 97, 238, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: bgMove 20s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
+            filter: blur(2px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-10px) translateX(20px);
+            }
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .sidebar-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--light);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 260px;
+            transition: all 0.3s ease;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .faq-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .faq-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .faq-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .faq-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .faq-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .faq {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq:last-child {
+            border-bottom: none;
+        }
+
+        .faq:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 0;
+        }
+
+        .faq-question h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--light);
+        }
+
+        .faq-answer {
+            display: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            line-height: 1.6;
+            padding: 15px 0;
+        }
+
+        .faq-answer.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .arrow {
+            transition: transform 0.3s ease;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .arrow.active {
+            transform: rotate(180deg);
+        }
+
+        /* Contact Section */
+        .contact-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--warning), #ff9a00);
+        }
+
+        .contact-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--warning), #ff9a00);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .contact-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .contact-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .contact-item i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .contact-item span {
+            color: var(--light);
+        }
+
+        /* Mobile Navigation */
+        .mobile-top-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            /* background: var(--sidebar-bg);
+            backdrop-filter: blur(10px); */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-top-bar .home-link {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .mobile-top-bar .home-link i {
+            margin-right: 8px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav a span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .bottom-nav a.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav a:hover {
+            color: var(--light);
+            transform: translateY(-3px);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-menu li {
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .side-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .side-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .side-menu a:hover {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+            padding-left: 25px;
+        }
+
+        .side-menu i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .menu-overlay.open {
+            display: block;
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1002;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+        }
+        .hamburger span {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-top-bar {
+                display: flex;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .bottom-nav {
+                display: flex;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .faq-container,
+            .contact-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-grid"></div>
+        <div id="circles-container"></div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <span>Z€RO</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+                <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+                <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+                <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+                <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="/help" class="active"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+                <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Help & FAQ</h1>
+                <p class="page-subtitle">Find answers to common questions about the crypto mining dashboard and learn how to maximize your earnings</p>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-container">
+                <div class="faq-header">
+                    <div class="faq-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="faq-title">Frequently Asked Questions</h3>
+                </div>
+
+                <div class="faq">
+                    <div class="faq-question">
+                        <h4>How does mining work?</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        Click the 'Start Mining' button on the dashboard. A timer will begin, and once it completes, you'll receive coins based on your current level and mining rate. You can see the progress bar fill up during the cycle.
+                    </div>
+                </div>
+
+                <div class="faq">
+                    <div class="faq-question">
+                        <h4>What determines my mining rate?</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        Your mining rate is influenced by your level and any upgrades you purchase in the shop. Higher levels and better upgrades increase your mining rate, allowing you to earn more coins per cycle.
+                    </div>
+                </div>
+
+                <div class="faq">
+                    <div class="faq-question">
+                        <h4>How do I level up?</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        You level up by earning experience points (EXP). EXP is gained through mining, claiming bonuses, and referring friends. Each level requires more EXP to reach the next level, and your mining rate improves as you level up.
+                    </div>
+                </div>
+
+                <div class="faq">
+                    <div class="faq-question">
+                        <h4>What are bonuses?</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        Bonuses are additional rewards you can claim daily or earn through referrals. Daily bonuses give you a random amount of coins, while referral bonuses reward you with coins for each friend who joins using your referral link.
+                    </div>
+                </div>
+
+                <div class="faq">
+                    <div class="faq-question">
+                        <h4>How do referrals work?</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        On the Referrals page, you'll find your unique referral link. Share it with friends, and when they sign up using your link, you'll earn a bonus. You can track your referred users and total bonus earned on the Referrals page.
+                    </div>
+                </div>
+
+                <div class="faq">
+                    <div class="faq-question">
+                        <h4>Can I buy upgrades?</h4>
+                        <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, you can purchase upgrades in the Shop to improve your mining rate and earn more coins. Upgrades can be bought using the coins you've earned from mining, bonuses, or referrals.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="contact-container">
+                <div class="contact-header">
+                    <div class="contact-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="contact-title">Need More Help?</h3>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>support@zero.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-discord"></i>
+                        <span>Discord Community</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-telegram"></i>
+                        <span>Telegram Channel</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-twitter"></i>
+                        <span>@ZeroMining</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar">
+        <a href="/home1" class="home-link">
+            <!-- <i class="fas fa-coins"></i>
+            <span>Z€RO</span> -->
+        </a>
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="/desh1"><span><i class="fas fa-home"></i></span><span>Home</span></a>
+        <a href="/statistics"><span><i class="fas fa-chart-line"></i></span><span>Stats</span></a>
+        <a href="/gift"><span><i class="fas fa-gift"></i></span><span>Gift</span></a>
+        <a href="/speen"><span><i class="fas fa-sync-alt"></i></span><span>Spin</span></a>
+        <a href="/profile" class="active"><span><i class="fas fa-user"></i></span><span>Profile</span></a>
+    </div>
+
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Side Menu -->
+    <div id="sideMenu" class="side-menu">
+        <ul>
+            <li><a href="/referrals"><i class="fas fa-user-friends"></i> Referral</a></li>
+            <li><a href="/shop"><i class="fas fa-shopping-bag"></i> Shop</a></li>
+            <li><a href="/code-claim"><i class="fas fa-ticket-alt"></i> Pass claim</a></li>
+            <li><a href="/levels"><i class="fas fa-layer-group"></i> Levels</a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i> Setting</a></li>
+            <li><a href="/rankings"><i class="fas fa-trophy"></i> Rankings</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/home1"><i class="fas fa-home"></i> Home</a></li>
+        </ul>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
+
+    <script>
+        // Create animated background circles
+        function createAnimatedBackground() {
+            const container = document.getElementById('circles-container');
+            const circleCount = 15;
+            
+            for (let i = 0; i < circleCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Random position
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                circle.style.animationDuration = `${Math.random() * 20 + 20}s`;
+                circle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(circle);
+            }
+        }
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            hamburger.classList.toggle('active');
+            sideMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+
+        menuOverlay.addEventListener('click', toggleMenu);
+
+        // Toggle FAQ answers
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const arrow = question.querySelector('.arrow');
+                answer.classList.toggle('active');
+                arrow.classList.toggle('active');
+            });
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createAnimatedBackground();
+        });
+    </script>
+</body>
+</html>

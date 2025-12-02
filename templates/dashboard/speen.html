@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-Games for Bonus Coins - Z€RO</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --dark: #0a0e27;
+            --darker: #050714;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --card-bg: rgba(26, 32, 53, 0.7);
+            --sidebar-bg: rgba(15, 23, 42, 0.9);
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(67, 97, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(67, 97, 238, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: bgMove 20s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
+            filter: blur(2px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-10px) translateX(20px);
+            }
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .sidebar-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--light);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 260px;
+            transition: all 0.3s ease;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Coins Display */
+        .coins-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(67, 97, 238, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); }
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Game Card */
+        .game-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .game-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .game-icon.scratch {
+            background: linear-gradient(135deg, var(--warning), #ff9a00);
+            color: white;
+        }
+
+        .game-icon.spin {
+            background: linear-gradient(135deg, var(--success), #00c49a);
+            color: white;
+        }
+
+        .game-icon.quiz {
+            background: linear-gradient(135deg, var(--secondary), #6a5acd);
+            color: white;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .game-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-canvas {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            display: block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .game-canvas:hover {
+            box-shadow: 0 0 20px rgba(67, 97, 238, 0.5);
+            border-color: rgba(67, 97, 238, 0.5);
+        }
+
+        .game-result {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin: 15px 0;
+            text-align: center;
+            min-height: 30px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .game-button {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            margin: 10px auto 0;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            display: block;
+            width: fit-content;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .game-button:hover::before {
+            left: 100%;
+        }
+
+        .game-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .game-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: var(--gray-dark);
+        }
+
+        /* Cooldown Overlay */
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .cooldown-icon {
+            font-size: 3rem;
+            color: var(--warning);
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        .cooldown-message {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--warning);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .cooldown-timer {
+            font-size: 1rem;
+            color: var(--light);
+            text-align: center;
+        }
+
+        /* Quiz Styles */
+        .quiz-question {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            border-left: 3px solid var(--accent);
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(67, 97, 238, 0.1);
+            transition: left 0.3s ease;
+        }
+
+        .quiz-option:hover::before {
+            left: 0;
+        }
+
+        .quiz-option:hover {
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateX(5px);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+
+        .quiz-option:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quiz-option.correct {
+            background: rgba(6, 255, 165, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(251, 86, 7, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* Mobile Navigation */
+        .mobile-top-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            /* background: var(--sidebar-bg);
+            backdrop-filter: blur(10px); */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-top-bar .home-link {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .mobile-top-bar .home-link i {
+            margin-right: 8px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav a span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .bottom-nav a.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav a:hover {
+            color: var(--light);
+            transform: translateY(-3px);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-menu li {
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .side-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .side-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .side-menu a:hover {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+            padding-left: 25px;
+        }
+
+        .side-menu i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .menu-overlay.open {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-top-bar {
+                display: flex;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .bottom-nav {
+                display: flex;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .game-card {
+                padding: 20px;
+            }
+
+            .coins-display {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-grid"></div>
+        <div id="circles-container"></div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <span>Z€RO</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+                <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+                <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+                <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+                <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="/help"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+                <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Mini-Games for Bonus Coins</h1>
+                <p class="page-subtitle">Play these quick games to earn bonus coins while mining is idle!</p>
+            </div>
+
+            <!-- Coins Display -->
+            <div class="coins-display" id="coins-display">
+                <i class="fas fa-coins"></i>
+                <span id="coin-count">0.0000</span> Coins
+            </div>
+           
+            <!-- Games Grid -->
+            <div class="games-grid">
+                <!-- Scratch Card Game -->
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="game-icon scratch">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <h2 class="game-title">Scratch Card</h2>
+                    </div>
+                    <div class="game-content">
+                        <div id="scratch-cooldown" class="cooldown-overlay" style="display:none;">
+                            <div class="cooldown-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="cooldown-message">Game on Cooldown</div>
+                            <div class="cooldown-timer" id="scratch-timer">00:00:00</div>
+                        </div>
+                        <canvas id="scratchCanvas" width="300" height="200" class="game-canvas"></canvas>
+                        <div id="scratchResult" class="game-result"></div>
+                        <button id="scratchBtn" class="game-button">
+                            <i class="fas fa-hand-pointer"></i> Start Scratch
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Spin Wheel Game -->
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="game-icon spin">
+                            <i class="fas fa-circle-notch"></i>
+                        </div>
+                        <h2 class="game-title">Spin Wheel</h2>
+                    </div>
+                    <div class="game-content">
+                        <div id="spin-cooldown" class="cooldown-overlay" style="display:none;">
+                            <div class="cooldown-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="cooldown-message">Game on Cooldown</div>
+                            <div class="cooldown-timer" id="spin-timer">00:00:00</div>
+                        </div>
+                        <canvas id="wheelCanvas" width="300" height="300" class="game-canvas"></canvas>
+                        <div id="wheelResult" class="game-result"></div>
+                        <button id="spinBtn" class="game-button">
+                            <i class="fas fa-sync-alt"></i> Spin Wheel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Game -->
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="game-icon quiz">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h2 class="game-title">Quick Quiz</h2>
+                    </div>
+                    <div class="game-content">
+                        <div id="quiz-cooldown" class="cooldown-overlay" style="display:none;">
+                            <div class="cooldown-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="cooldown-message">Game on Cooldown</div>
+                            <div class="cooldown-timer" id="quiz-timer">00:00:00</div>
+                        </div>
+                        <button id="startQuizBtn" class="game-button">
+                            <i class="fas fa-play"></i> Start Quiz
+                        </button>
+                        <div id="quiz-question" class="quiz-question" style="display:none;"></div>
+                        <div id="quiz-options" style="display:none;"></div>
+                        <div id="quizResult" class="game-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar">
+        <a href="/home1" class="home-link">
+            <!-- <i class="fas fa-coins"></i>
+            <span>Z€RO</span> -->
+        </a>
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="/desh1"><span><i class="fas fa-home"></i></span><span>Home</span></a>
+        <a href="/statistics"><span><i class="fas fa-chart-line"></i></span><span>Stats</span></a>
+        <a href="/gift"><span><i class="fas fa-gift"></i></span><span>Gift</span></a>
+        <a href="/speen"><span><i class="fas fa-sync-alt"></i></span><span>Spin</span></a>
+        <a href="/profile"><span><i class="fas fa-user"></i></span><span>Profile</span></a>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="side-menu">
+        <ul>
+            <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+            <li><a href="/statistics"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+            <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+            <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+            <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            <li><a href="/help"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+            <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <script>
+        // Fetch user data from API
+        let gameEarnings = 0;
+        let isScratching = false;
+        let quizQuestionIndex = 0;
+        let quizScore = 0;
+        let quizAnswered = [];
+        let cooldownIntervals = {};
+        let currentSpinSegment = 0; // For server-determined spin
+
+        // Expanded quiz questions for better experience
+        const quizQuestions = [
+            { question: "What is 2 + 2?", options: ["3", "4", "5"], correct: 1 },
+            { question: "What is the capital of France?", options: ["Berlin", "Paris", "London"], correct: 1 },
+            { question: "Which is the largest planet in our solar system?", options: ["Earth", "Jupiter", "Mars"], correct: 1 },
+            { question: "What is the chemical symbol for gold?", options: ["Ag", "Au", "Fe"], correct: 1 },
+            { question: "How many sides does a hexagon have?", options: ["5", "6", "7"], correct: 1 }
+        ];
+
+        // API base URL (adjust if needed)
+        const API_BASE = '/api';
+
+        // Create animated background circles
+        function createAnimatedBackground() {
+            const container = document.getElementById('circles-container');
+            const circleCount = 15;
+            
+            for (let i = 0; i < circleCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Random position
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                circle.style.animationDuration = `${Math.random() * 20 + 20}s`;
+                circle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(circle);
+            }
+        }
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideMenu = document.getElementById('side-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sideMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+        });
+
+        menuOverlay.addEventListener('click', () => {
+            sideMenu.classList.remove('open');
+            menuOverlay.classList.remove('open');
+        });
+
+        // Format time as HH:MM:SS
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update cooldown timer
+        function updateCooldownTimer(gameType) {
+            // Fetch last times from API if needed, but for simplicity, use local for display
+            // In real, fetch from /api/user
+            fetchUserData(); // Refresh periodically
+            const lastKey = `last${gameType.charAt(0).toUpperCase() + gameType.slice(1)}`;
+            // Assume userData has it from fetch
+            const lastTime = userData[lastKey] || 0;
+            const timerElement = document.getElementById(`${gameType}-timer`);
+            
+            const now = Date.now() / 1000;
+            const elapsed = now - lastTime;
+            const remaining = Math.max(0, 86400 - elapsed); // 24 hours cooldown
+            
+            if (remaining > 0) {
+                timerElement.textContent = formatTime(remaining);
+                return false;
+            }
+            
+            timerElement.textContent = "00:00:00";
+            return true;
+        }
+
+        // Check and update cooldown status
+        function checkCooldown(gameType) {
+            const cooldownOverlay = document.getElementById(`${gameType}-cooldown`);
+            const isAvailable = updateCooldownTimer(gameType);
+            
+            if (isAvailable) {
+                cooldownOverlay.style.display = 'none';
+                return true;
+            } else {
+                cooldownOverlay.style.display = 'flex';
+                return false;
+            }
+        }
+
+        // Start cooldown timer updates
+        function startCooldownTimers() {
+            // Clear existing intervals
+            Object.values(cooldownIntervals).forEach(interval => clearInterval(interval));
+            cooldownIntervals = {};
+            
+            // Start new intervals
+            ['scratch', 'spin', 'quiz'].forEach(gameType => {
+                cooldownIntervals[gameType] = setInterval(() => {
+                    updateCooldownTimer(gameType);
+                    checkCooldown(gameType);
+                }, 1000);
+            });
+        }
+
+        // Fetch user data from API
+        let userData = {};
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${API_BASE}/user`);
+                const data = await response.json();
+                userData = data;
+                gameEarnings = data.gameEarnings || 0;
+                updateCoins();
+                
+                // Check cooldowns for all games
+                ['scratch', 'spin', 'quiz'].forEach(gameType => {
+                    checkCooldown(gameType);
+                });
+            } catch (err) {
+                console.error('Fetch user data error:', err);
+            }
+        }
+
+        // Update coin display
+        function updateCoins() {
+            document.getElementById('coin-count').textContent = gameEarnings.toFixed(4);
+            // Add animation
+            const coinEl = document.getElementById('coin-count');
+            coinEl.style.color = '#ffd700';
+            setTimeout(() => { coinEl.style.color = 'white'; }, 1000);
+        }
+
+        // Start game on server
+        async function startGameOnServer(gameType) {
+            const response = await fetch(`${API_BASE}/start-game`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: gameType })
+            });
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error);
+            return data;
+        }
+
+        // Claim game prize on server
+        async function claimGamePrize(gameType, prize) {
+            const response = await fetch(`${API_BASE}/claim-game`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: gameType, prize: prize })
+            });
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error);
+            // Refresh user data after claim
+            await fetchUserData();
+            return data;
+        }
+
+        // Scratch Card Game
+        const scratchCanvas = document.getElementById('scratchCanvas');
+        const scratchCtx = scratchCanvas.getContext('2d');
+        let scratchPrize = 0;
+
+        function drawScratchCard() {
+            scratchCtx.clearRect(0, 0, 300, 200);
+            scratchCtx.fillStyle = '#1a1f2e';
+            scratchCtx.fillRect(0, 0, 300, 200);
+            scratchCtx.fillStyle = '#fff';
+            scratchCtx.font = 'bold 24px Poppins';
+            scratchCtx.textAlign = 'center';
+            scratchCtx.fillText('Scratch Here! ✨', 150, 100);
+            document.getElementById('scratchResult').textContent = '';
+        }
+
+        function getPos(e) {
+            const rect = scratchCanvas.getBoundingClientRect();
+            return {
+                x: (e.clientX || e.touches[0].clientX) - rect.left,
+                y: (e.clientY || e.touches[0].clientY) - rect.top
+            };
+        }
+
+        function attachScratchEvents(active = true) {
+            scratchCanvas.removeEventListener('mousedown', handleScratchStart);
+            scratchCanvas.removeEventListener('mouseup', handleScratchEnd);
+            scratchCanvas.removeEventListener('mousemove', handleScratchMove);
+            scratchCanvas.removeEventListener('touchstart', handleScratchStart);
+            scratchCanvas.removeEventListener('touchend', handleScratchEnd);
+            scratchCanvas.removeEventListener('touchmove', handleScratchMove);
+
+            if (active) {
+                scratchCanvas.style.pointerEvents = 'auto';
+                scratchCanvas.addEventListener('mousedown', handleScratchStart);
+                scratchCanvas.addEventListener('mouseup', handleScratchEnd);
+                scratchCanvas.addEventListener('mousemove', handleScratchMove);
+                scratchCanvas.addEventListener('touchstart', handleScratchStart);
+                scratchCanvas.addEventListener('touchend', handleScratchEnd);
+                scratchCanvas.addEventListener('touchmove', handleScratchMove);
+            } else {
+                scratchCanvas.style.pointerEvents = 'none';
+            }
+        }
+
+        function handleScratchStart(e) {
+            isScratching = true;
+            e.preventDefault();
+        }
+
+        function handleScratchEnd(e) {
+            isScratching = false;
+            e.preventDefault();
+        }
+
+        function handleScratchMove(e) {
+            if (!isScratching) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            scratchCtx.globalCompositeOperation = 'destination-out';
+            scratchCtx.beginPath();
+            scratchCtx.arc(pos.x, pos.y, 15, 0, 2 * Math.PI);
+            scratchCtx.fill();
+            checkScratchComplete();
+        }
+
+        function checkScratchComplete() {
+            const imageData = scratchCtx.getImageData(0, 0, 300, 200);
+            const pixels = imageData.data;
+            let transparentPixels = 0;
+            for (let i = 3; i < pixels.length; i += 4) {
+                if (pixels[i] === 0) transparentPixels++;
+            }
+            if (transparentPixels > 300 * 200 * 0.6) {
+                revealScratch();
+            }
+        }
+
+        function revealScratch() {
+            scratchCtx.globalCompositeOperation = 'source-over';
+            const gradient = scratchCtx.createLinearGradient(0, 0, 300, 200);
+            gradient.addColorStop(0, '#ffd700');
+            gradient.addColorStop(1, '#ff9a00');
+            scratchCtx.fillStyle = gradient;
+            scratchCtx.fillRect(0, 0, 300, 200);
+            scratchCtx.fillStyle = '#000';
+            scratchCtx.font = 'bold 28px Poppins';
+            scratchCtx.textAlign = 'center';
+            scratchCtx.fillText(`You Won ${scratchPrize} Coins! 🎊`, 150, 100);
+            
+            document.getElementById('scratchResult').textContent = `You won ${scratchPrize} coins! 🎉`;
+            attachScratchEvents(false); // Disable after reveal
+
+            // Claim prize
+            claimGamePrize('scratch', scratchPrize);
+                
+            setTimeout(() => {
+                drawScratchCard();
+                document.getElementById('scratchBtn').disabled = false;
+            }, 3000);
+        }
+
+        async function startScratch() {
+            if (!checkCooldown('scratch')) return;
+
+            try {
+                const data = await startGameOnServer('scratch');
+                scratchPrize = data.prize; // Server-determined unique prize
+                drawScratchCard();
+                attachScratchEvents(true);
+                document.getElementById('scratchBtn').disabled = true;
+            } catch (err) {
+                console.error("Start error:", err);
+                alert(err.message);
+            }
+        }
+
+        document.getElementById('scratchBtn').addEventListener('click', startScratch);
+
+        // Spin Wheel Game
+        const wheelCanvas = document.getElementById('wheelCanvas');
+        const wheelCtx = wheelCanvas.getContext('2d');
+        let wheelAngle = 0;
+        let spinning = false;
+
+        // Prizes list (client uses for drawing, but outcome from server)
+        const prizes = [1,1,1, 5,5,5, 10,10,10, 30, 60, 100];
+        const colors = ['#FF6B6B', '#FF6B6B', '#FF6B6B', '#4ECDC4', '#4ECDC4', '#4ECDC4', '#45B7D1', '#45B7D1', '#45B7D1', '#FFEAA7', '#DDA0DD', '#96CEB4'];
+
+        function drawWheel() {
+            wheelCtx.clearRect(0, 0, 300, 300);
+            const centerX = 150;
+            const centerY = 150;
+            const radius = 140;
+            const numSegments = 12;
+
+            for (let i = 0; i < numSegments; i++) {
+                wheelCtx.beginPath();
+                wheelCtx.moveTo(centerX, centerY);
+                wheelCtx.arc(centerX, centerY, radius, wheelAngle + (i * 2 * Math.PI / numSegments), wheelAngle + ((i + 1) * 2 * Math.PI / numSegments));
+                wheelCtx.closePath();
+                wheelCtx.fillStyle = colors[i];
+                wheelCtx.fill();
+                wheelCtx.strokeStyle = '#fff';
+                wheelCtx.lineWidth = 2;
+                wheelCtx.stroke();
+
+                // Text
+                wheelCtx.save();
+                wheelCtx.translate(centerX, centerY);
+                wheelCtx.rotate(wheelAngle + (i * 2 * Math.PI / numSegments) + (Math.PI / numSegments));
+                wheelCtx.textAlign = 'right';
+                wheelCtx.fillStyle = '#fff';
+                wheelCtx.font = 'bold 12px Poppins';
+                wheelCtx.fillText(`${prizes[i]} 💰`, radius - 30, 5);
+                wheelCtx.restore();
+            }
+
+            // Pointer
+            wheelCtx.beginPath();
+            wheelCtx.moveTo(centerX, centerY - radius - 20);
+            wheelCtx.lineTo(centerX - 10, centerY - radius);
+            wheelCtx.lineTo(centerX + 10, centerY - radius);
+            wheelCtx.closePath();
+            wheelCtx.fillStyle = '#ffd700';
+            wheelCtx.shadowColor = '#ffd700';
+            wheelCtx.shadowBlur = 10;
+            wheelCtx.fill();
+            wheelCtx.shadowBlur = 0;
+        }
+
+        function spinToSegment(targetSegment) {
+            const segmentAngle = 2 * Math.PI / prizes.length;
+            // Calculate final angle to land on target segment (pointer at top)
+            const targetAngle = (2 * Math.PI - (targetSegment * segmentAngle + segmentAngle / 2)) % (2 * Math.PI);
+            // Add full rotations for animation
+            const fullRotations = 5 * 2 * Math.PI;
+            const finalAngle = wheelAngle + fullRotations + targetAngle;
+
+            const spinTime = 4000;
+            let startTime = Date.now();
+            let startAngle = wheelAngle;
+
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / spinTime, 1);
+                // Ease out for deceleration
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                wheelAngle = startAngle + (finalAngle - startAngle) * easedProgress;
+                drawWheel();
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    spinning = false;
+                    document.getElementById('spinBtn').disabled = false;
+                    getWheelResult();
+                }
+            }
+            animate();
+        }
+
+        async function spinWheel() {
+            if (!checkCooldown('spin')) return;
+            if (spinning) return;
+
+            try {
+                const data = await startGameOnServer('spin');
+                currentSpinSegment = data.segment; // Server-determined unique segment
+                spinning = true;
+                document.getElementById('spinBtn').disabled = true;
+                spinToSegment(currentSpinSegment);
+            } catch (err) {
+                console.error("Start error:", err);
+                alert(err.message);
+            }
+        }
+
+        document.getElementById('spinBtn').addEventListener('click', spinWheel);
+
+        function getWheelResult() {
+            const prize = prizes[currentSpinSegment];
+            document.getElementById('wheelResult').textContent = `You got: ${prize} Coins 💎 ✨`;
+
+            // Claim prize
+            claimGamePrize('spin', prize);
+                
+            setTimeout(() => {
+                document.getElementById('wheelResult').textContent = '';
+            }, 5000);
+        }
+
+        // Quiz Game
+        const quizOptionsDiv = document.getElementById('quiz-options');
+        const quizQuestionEl = document.getElementById('quiz-question');
+        const startQuizBtn = document.getElementById('startQuizBtn');
+
+        async function startQuiz() {
+            if (!checkCooldown('quiz')) return;
+
+            try {
+                await startGameOnServer('quiz');
+                quizQuestionIndex = 0;
+                quizScore = 0;
+                quizAnswered = [];
+                loadQuizQuestion();
+                startQuizBtn.style.display = 'none';
+                quizQuestionEl.style.display = 'block';
+                quizOptionsDiv.style.display = 'block';
+            } catch (err) {
+                console.error("Start error:", err);
+                alert(err.message);
+            }
+        }
+
+        startQuizBtn.addEventListener('click', startQuiz);
+
+        function loadQuizQuestion() {
+            if (quizQuestionIndex >= 3) { // Limit to 3 questions for quick play
+                endQuiz();
+                return;
+            }
+            const q = quizQuestions[quizQuestionIndex];
+            quizQuestionEl.innerHTML = q.question;
+            quizOptionsDiv.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerHTML = opt;
+                btn.onclick = () => selectQuizAnswer(index);
+                btn.disabled = quizAnswered[quizQuestionIndex] !== undefined;
+                quizOptionsDiv.appendChild(btn);
+            });
+            document.getElementById('quizResult').textContent = '';
+        }
+
+        function selectQuizAnswer(selected) {
+            const q = quizQuestions[quizQuestionIndex];
+            quizAnswered[quizQuestionIndex] = selected === q.correct;
+            if (quizAnswered[quizQuestionIndex]) quizScore++;
+            
+            // Disable all options and show correct/incorrect
+            const options = quizOptionsDiv.querySelectorAll('.quiz-option');
+            options.forEach((opt, index) => {
+                opt.disabled = true;
+                if (index === q.correct) {
+                    opt.classList.add('correct');
+                } else if (index === selected && !quizAnswered[quizQuestionIndex]) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            // Feedback
+            if (quizAnswered[quizQuestionIndex]) {
+                document.getElementById('quizResult').textContent = 'Correct! ✅';
+            } else {
+                document.getElementById('quizResult').textContent = `Wrong! The answer was ${q.options[q.correct]} ❌`;
+            }
+            
+            setTimeout(() => {
+                quizQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            quizQuestionEl.style.display = 'none';
+            quizOptionsDiv.innerHTML = '';
+            quizOptionsDiv.style.display = 'none';
+            let bonus = 0;
+            if (quizScore === 3) bonus = 5;
+            else if (quizScore === 2) bonus = 4;
+            else if (quizScore === 1) bonus = 3;
+            else bonus = 1; // Minimum for participation
+            
+            document.getElementById('quizResult').textContent = `Quiz Complete! Score: ${quizScore}/3. You earned ${bonus} Coins! 🏆`;
+            
+            if (bonus > 0) {
+                // Claim prize
+                claimGamePrize('quiz', bonus);
+            }
+            
+            startQuizBtn.style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('quizResult').textContent = '';
+            }, 5000);
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createAnimatedBackground();
+            fetchUserData();
+            attachScratchEvents(false);
+            drawWheel();
+        });
+    </script>
+</body>
+</html>

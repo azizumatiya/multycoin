@@ -1,0 +1,255 @@
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+
+    <h2>DASHBOARD</h2>
+    <ul>
+        <li><a href="/desh1"><span>🏠</span><span>Dashboard</span></a></li>
+        <li><a href="/statistics"><span>📊</span><span>Statistics</span></a></li>
+        <li><a href="/rankings"><span>🏆</span><span>Ranking</span></a></li>
+        <li><a href="/shop"><span>🛒</span><span>Shop</span></a></li>
+        <li><a href="/gift"><span>🎁</span><span>Gift</span></a></li>
+        <li><a href="/referrals"><span>👥</span><span>Referrals</span></a></li>
+        <li><a href="/settings"><span>⚙️</span><span>Settings</span></a></li>
+        <li><a href="/help"><span>❓</span><span>Help</span></a></li>
+        <li><a href="/home1"><span>🏡</span><span>Home</span></a></li>
+        <li><a href="/logout"><span>🚪</span><span>Logout</span></a></li>
+
+        <!-- <li><a href="{{ url_for('serve_profile') }}"><span>👤</span><span>Profile</span></a></li> -->
+
+    </ul>
+</div>
+
+<style>
+    body {
+        background-color: #1A1F2B;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 200px;
+        background-color: #2A2F3B;
+        padding: 20px;
+        margin: 10px;
+        border-radius: 10px;
+    }
+
+    .sidebar h2 {
+        color: #4299E1;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .sidebar li:hover {
+        background-color: #3A3F4B;
+    }
+
+    .sidebar a {
+        color: #FFFFFF;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .top-row,
+    .bottom-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        background-color: #2A2F3B;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .card h3 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-icon {
+        width: 50px;
+        height: 50px;
+        background-color: #9F7AEA;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5em;
+    }
+
+    .exp-bar {
+        width: 100%;
+        background-color: #A0AEC0;
+        height: 10px;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    .exp-bar-fill {
+        background-color: #9F7AEA;
+        height: 100%;
+        border-radius: 5px;
+        width: 0%;
+    }
+
+    .balance,
+    .mining-status {
+        font-size: 1.5em;
+    }
+
+    .mining-status p {
+        font-size: 0.9em;
+        color: #A0AEC0;
+    }
+
+    .start-mining-btn {
+        background-color: #38A169;
+        color: #FFFFFF;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+    .start-mining-btn:disabled {
+        background-color: #A0AEC0;
+        cursor: not-allowed;
+    }
+
+    .start-mining-btn:hover:not(:disabled) {
+        background-color: #2F855A;
+    }
+
+    .transaction-history {
+        flex: 2;
+        min-width: 500px;
+    }
+
+    .transaction-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .transaction-buttons button {
+        background-color: #3A3F4B;
+        color: #FFFFFF;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .transaction-buttons button:hover {
+        background-color: #4A4F5B;
+    }
+
+    .transaction-list {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .transaction {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #3A3F4B;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+
+    .bonus {
+        color: #F6E05E;
+    }
+
+    .mining {
+        color: #63B3ED;
+    }
+
+    .amount {
+        color: #38A169;
+    }
+
+    .right-column {
+        flex: 1;
+        min-width: 300px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .daily-bonus p {
+        color: #A0AEC0;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+    }
+
+    .claim-bonus-btn {
+        background-color: #F6E05E;
+        color: #000000;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .claim-bonus-btn:hover {
+        background-color: #ECC94B;
+    }
+
+    .mining-stats {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .stat {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stat p {
+        color: #A0AEC0;
+        font-size: 0.9em;
+    }
+</style>

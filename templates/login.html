@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in to Z€RO to mine cryptocurrency, earn referral bonuses, and manage your account. Start your crypto journey today!">
+    <meta name="keywords" content="Z€RO, cryptocurrency mining, login, crypto rewards, blockchain earnings">
+    <meta name="author" content="Z€RO Team">
+    <title>Z€RO - Login</title>
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(0deg, rgb(0, 32, 63) 34%, rgb(0, 32, 63) 66%, rgb(0, 32, 63) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        .hero {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: #ADEFD1FF;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .coin-image {
+            position: absolute;
+            top: 20%;
+            left: 5%;
+            opacity: 0.3;
+            animation: fadeIn 2s ease-in;
+        }
+
+        .coin-image img {
+            width: 200px;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 400px;
+        }
+
+        .form-container h2 {
+            font-size: 2rem;
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-container label {
+            font-size: 1.2rem;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-container input::placeholder {
+            color: #ccc;
+        }
+
+        .form-container button {
+            width: 100%;
+            background-color: #00d4ff;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .form-container button:hover {
+            background-color: #8cd1b3;
+        }
+
+        .form-container .signin {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .form-container a {
+            color: #ADEFD1FF;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .form-container a:hover {
+            color: #8cd1b3;
+        }
+
+        .message {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        .message.success {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .message.error {
+            color: #ff4d4d;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        footer {
+            background: linear-gradient(0deg, rgba(73,80,87,1) 34%, rgba(108,117,125,1) 66%);
+            color: white;
+            padding: 40px 20px;
+            border-top: 2px solid black;
+            width: 100%;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 2fr;
+            gap: 20px;
+        }
+
+        .footer-col {
+            padding: 0 15px;
+        }
+
+        .footer-col h4 {
+            color: #ADEFD1FF;
+            font-family: 'Sofia', cursive;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .footer-col p, .footer-col ul, .footer-col li {
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ADEFD1FF;
+        }
+
+        .footer-col .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .footer-col .social-links a {
+            color: white;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        .footer-col .social-links a:hover {
+            color: #ADEFD1FF;
+        }
+
+        .newsletter form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .newsletter input[type="email"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .newsletter button {
+            padding: 10px;
+            background-color: #ADEFD1FF;
+            color: rgb(0, 32, 63);
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .newsletter button:hover {
+            background-color: #8cd1b3;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #ccc;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 0.3; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .hero {
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .form-container {
+                max-width: 90%;
+                padding: 20px;
+            }
+
+            .form-container h2 {
+                font-size: 1.8rem;
+            }
+
+            .form-container label {
+                font-size: 1rem;
+            }
+
+            .coin-image {
+                top: 10%;
+                left: 2%;
+            }
+
+            .coin-image img {
+                width: 150px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-col .social-links {
+                justify-content: center;
+            }
+
+            .newsletter form {
+                align-items: center;
+            }
+
+            .newsletter input[type="email"], .newsletter button {
+                width: 80%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo a {
+                font-size: 22px;
+            }
+
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .form-container h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-container input, .form-container button {
+                font-size: 0.9rem;
+            }
+
+            .coin-image img {
+                width: 100px;
+            }
+
+            .footer-col h4 {
+                font-size: 1.2em;
+            }
+        }
+        
+        .navbar {
+            max-width: 1300px;
+            margin: auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .logo a {
+            font-size: clamp(24px, 4vw, 34px);
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar">
+            <div class="logo"><a href="{{ url_for('serve_registration') }}">Z€RO</a></div>
+            <div class="nav-links">
+                <!-- Navigation links unchanged -->
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="hero">
+            <h2>Join Z€RO Today</h2>
+            <p>Log in to start mining cryptocurrency, earn referral bonuses, and manage your account with ease.</p>
+        </div>
+        <div class="form-container">
+            <h2>Login</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form method="POST" action="">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                
+                <button type="submit">Submit</button>
+            </form>
+            <div class="signin">
+                <p>Not a member? <a href="{{ url_for('serve_registration') }}">Registration</a></p>
+            </div>
+            <a href="forgot-password">Forgot Password?</a>
+        </div>
+    </div>
+   
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

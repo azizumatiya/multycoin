@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Crypto Mining Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #fb5607;
+            --dark: #0a0e27;
+            --darker: #050714;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-dark: #343a40;
+            --card-bg: rgba(26, 32, 53, 0.7);
+            --sidebar-bg: rgba(15, 23, 42, 0.9);
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(67, 97, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(67, 97, 238, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: bgMove 20s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
+            filter: blur(2px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-10px) translateX(20px);
+            }
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .sidebar-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--light);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 260px;
+            transition: all 0.3s ease;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* Settings Cards */
+        .settings-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .settings-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .settings-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .settings-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .settings-card-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .settings-card-icon.profile {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .settings-card-icon.notification {
+            background: linear-gradient(135deg, var(--warning), #ff9a00);
+            color: white;
+        }
+
+        .settings-card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .settings-card-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(26, 32, 53, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .input-group p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle.active {
+            background-color: var(--success);
+        }
+
+        .toggle-circle {
+            width: 21px;
+            height: 21px;
+            background-color: var(--light);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle.active .toggle-circle {
+            left: 27px;
+        }
+
+        .toggle-group label {
+            font-size: 1.1rem;
+            color: var(--light);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+        }
+
+        .save-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .save-btn:hover::before {
+            left: 100%;
+        }
+
+        .save-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: var(--gray-dark);
+        }
+
+        /* Mobile Navigation */
+        .mobile-top-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            /* background: var(--sidebar-bg);
+            backdrop-filter: blur(10px); */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-top-bar .home-link {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .mobile-top-bar .home-link i {
+            margin-right: 8px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav a span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .bottom-nav a.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav a:hover {
+            color: var(--light);
+            transform: translateY(-3px);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-menu li {
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .side-menu li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .side-menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .side-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .side-menu a:hover {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--accent);
+            padding-left: 25px;
+        }
+
+        .side-menu i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .menu-overlay.open {
+            display: block;
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1002;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+        }
+        .hamburger span {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            color: var(--light);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        .toast.success i {
+            color: var(--success);
+        }
+
+        .toast.error i {
+            color: var(--danger);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-top-bar {
+                display: flex;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .bottom-nav {
+                display: flex;
+            }
+
+            .settings-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .save-btn {
+                width: 100%;
+                max-width: none;
+                margin: 20px 0 0 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+                margin-bottom: 50px;
+                margin-top: 50px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .settings-card {
+                padding: 20px;
+            }
+
+            .save-btn {
+                padding: 16px 20px;
+                font-size: 1.1rem;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-grid"></div>
+        <div id="circles-container"></div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <span>Z€RO</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="/desh1"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i><span>Statistics</span></a></li>
+                <li><a href="/shop"><i class="fas fa-shopping-cart"></i><span>Shop</span></a></li>
+                <li><a href="/gift"><i class="fas fa-gift"></i><span>Gift</span></a></li>
+                <li><a href="/referrals"><i class="fas fa-users"></i><span>Referrals</span></a></li>
+                <li><a href="/settings" class="active"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="/help"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+                <li><a href="/home1"><i class="fas fa-door-open"></i><span>Home</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-subtitle">Customize your account preferences and notification settings</p>
+            </div>
+
+            <!-- Settings Cards -->
+            <div class="settings-cards">
+                <!-- Profile Settings -->
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon profile">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 class="settings-card-title">Profile Settings</h3>
+                    </div>
+                    <p class="settings-card-description">Manage your public profile information and display preferences.</p>
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Enter your username">
+                        <p>This is your display name in the dashboard.</p>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon notification">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3 class="settings-card-title">Notification Settings</h3>
+                    </div>
+                    <p class="settings-card-description">Control how you receive notifications and alerts.</p>
+                    <div class="toggle-group">
+                        <div class="toggle" id="notification-toggle">
+                            <div class="toggle-circle"></div>
+                        </div>
+                        <label>Enable Notifications</label>
+                    </div>
+                    <p>Receive toasts for rewards, level ups, etc.</p>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <button class="save-btn" id="save-btn">
+                <i class="fas fa-save"></i>
+                Save Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar">
+        <a href="/home1" class="home-link">
+            <!-- <i class="fas fa-coins"></i>
+            <span>Z€RO</span> -->
+        </a>
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="/desh1"><span><i class="fas fa-home"></i></span><span>Home</span></a>
+        <a href="/statistics"><span><i class="fas fa-chart-line"></i></span><span>Stats</span></a>
+        <a href="/gift"><span><i class="fas fa-gift"></i></span><span>Gift</span></a>
+        <a href="/speen"><span><i class="fas fa-sync-alt"></i></span><span>Spin</span></a>
+        <a href="/profile"><span><i class="fas fa-user"></i></span><span>Profile</span></a>
+    </div>
+
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Side Menu -->
+    <div id="sideMenu" class="side-menu">
+        <ul>
+            <li><a href="/referrals"><i class="fas fa-user-friends"></i> Referral</a></li>
+            <li><a href="/shop"><i class="fas fa-shopping-bag"></i> Shop</a></li>
+            <li><a href="/code-claim"><i class="fas fa-ticket-alt"></i> Pass claim</a></li>
+            <li><a href="/levels"><i class="fas fa-layer-group"></i> Levels</a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i> Setting</a></li>
+            <li><a href="/rankings"><i class="fas fa-trophy"></i> Rankings</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/home1"><i class="fas fa-home"></i> Home</a></li>
+        </ul>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <script>
+        let userData = {};
+
+        // Create animated background circles
+        function createAnimatedBackground() {
+            const container = document.getElementById('circles-container');
+            const circleCount = 15;
+            
+            for (let i = 0; i < circleCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Random position
+                circle.style.left = `${Math.random() * 100}%`;
+                circle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                circle.style.animationDuration = `${Math.random() * 20 + 20}s`;
+                circle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(circle);
+            }
+        }
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            hamburger.classList.toggle('active');
+            sideMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+        }
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+
+        menuOverlay.addEventListener('click', toggleMenu);
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toast.className = `toast ${type}`;
+            toast.innerHTML = (type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>') + `<span id="toast-message">${message}</span>`;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // DOM elements
+        const elements = {
+            usernameInput: document.getElementById('username'),
+            notificationToggle: document.getElementById('notification-toggle'),
+            saveBtn: document.getElementById('save-btn')
+        };
+
+        // Fetch user data
+        // Save settings
+async function saveSettings() {
+    const newUsername = elements.usernameInput.value.trim();
+    const receiveNotifications = elements.notificationToggle.classList.contains('active');
+
+    if (!newUsername) {
+        showToast("Username cannot be empty.", 'error');
+        return;
+    }
+
+    // Disable save button during request
+    elements.saveBtn.disabled = true;
+    elements.saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+    try {
+        const response = await fetch('/api/update-settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: newUsername,
+                receiveNotifications: receiveNotifications
+            }),
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast("Settings updated successfully!", 'success');
+            userData.name = newUsername;
+            userData.receiveNotifications = receiveNotifications;
+        } else {
+            showToast(data.message || "Failed to update settings.", 'error');
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        showToast("Error saving settings.", 'error');
+    } finally {
+        elements.saveBtn.disabled = false;
+        elements.saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    }
+}
+
+// Toggle notifications
+if (elements.notificationToggle) {
+    elements.notificationToggle.addEventListener('click', () => {
+        elements.notificationToggle.classList.toggle('active');
+    });
+}
+
+// Initialize
+createAnimatedBackground();
+fetchUserData();
+
+// Save button event
+if (elements.saveBtn) {
+    elements.saveBtn.addEventListener('click', saveSettings);
+}
+
+</script>
+</body>
+</html>

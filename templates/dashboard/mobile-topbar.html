@@ -1,0 +1,73 @@
+<!-- mobile-topbar.html -->
+<div class="mobile-top-bar">
+  <a href="/home1" class="home-link">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<style>
+    /* Mobile Top Bar Styling */
+.mobile-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1E1E2E;
+  color: #fff;
+  padding: 10px 15px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
+}
+
+/* Home link style */
+.mobile-top-bar .home-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mobile-top-bar .home-link i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* Hamburger menu */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 4px;
+}
+
+.hamburger span {
+  width: 24px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Hover animation */
+.hamburger:hover span {
+  background-color: #00FFAA;
+}
+
+/* Make it appear only on mobile screens */
+@media (min-width: 768px) {
+  .mobile-top-bar {
+    display: none;
+  }
+}
+
+</style>
