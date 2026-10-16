@@ -1,5 +1,55 @@
+
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+
+# Python cache
 __pycache__/
-*.pyc
-.DS_Store
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
 .venv/
+env/
+ENV/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+logs/
+
+# IDE and editor
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Operating system
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Flask session and instance data
+instance/
+.flaskenv
+
+# Temporary files
+*.tmp
+*.bak
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db

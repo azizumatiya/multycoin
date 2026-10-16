@@ -10,6 +10,7 @@ import bcrypt
 import base64
 import os
 import hashlib
+from pymongo import MongoClient
 
 app = Flask(__name__)
 app.secret_key = "q1w2e3r4t5y6u7i8o9p0zaxscdvfbgnhmjkl"
@@ -19,7 +20,10 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 CORS(app)
 
 # MongoDB connection
-client = MongoClient("mongodb+srv://umatiyaaziz2004_db_user:umatiyaaziz2004@coinmining.evt4i93.mongodb.net/")
+# client= MongoClient("mongodb+srv://umatiyaaziz2004_db_user:umatiyaaziz2004@coinmining.evt4i93.mongodb.net/?appName=coinmining")
+
+client = MongoClient("mongodb+srv://umatiyaaziz2004_db_user:umatiyaaziz2004@cluster0.evt4i93.mongodb.net/?retryWrites=true&w=majority")
+# client = MongoClient("mongodb+srv://umatiyaaziz2004_db_user:umatiyaaziz2004@coinmining.evt4i93.mongodb.net/")
 db = client["crypto_mining"]
 users_collection = db["users"]
 user_data_collection = db["user_data"]
